@@ -1,0 +1,5 @@
+name: JoinCommands
+main: com.SirBlobman.joincommands.JoinCommands
+author: SirBlobman
+version: ${project.version}
+description: Execute commands when a player joins
