@@ -3,6 +3,6 @@
 
 <h2>Information</h2>
 <p>
-This plugin allows you to execute commands when a player joins your server.
+This plugin allows you to execute commands when a player joins your server.<br/>
 This can also be used to execute commands when players are teleported to a world.
 </p>
