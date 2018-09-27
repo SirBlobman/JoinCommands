@@ -23,14 +23,14 @@ public class JoinCommands extends Plugin implements Listener {
 
 	@Override
 	public void onEnable() {
-		SERVER.registerChannel("BC-JoinCommands");
+		SERVER.registerChannel("joincommands:bungeecord");
 		PM.registerListener(this, this);
 	}
 
 	@EventHandler
 	public void onReceive(PluginMessageEvent e) {
 		String tag = e.getTag();
-		if(tag.equals("BC-JoinCommands")) {
+		if(tag.equals("joincommands:bungeecord")) {
 			try {
 				byte[] data = e.getData();
 				ByteArrayInputStream bais = new ByteArrayInputStream(data);

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.SirBlobman</groupId>
 		<artifactId>joincommands-parent</artifactId>
-		<version>0.0.5</version>
+		<version>0.0.6</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>jc-1.13</artifactId>

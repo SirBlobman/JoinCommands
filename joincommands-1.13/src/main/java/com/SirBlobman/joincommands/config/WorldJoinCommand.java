@@ -88,7 +88,7 @@ public class WorldJoinCommand {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         String prefix = (console ? "CJC" : "PJC") + ":";
         out.writeUTF(prefix + command);
-        p.sendPluginMessage(JoinCommands.INSTANCE, "BC-JoinCommands", out.toByteArray());
+        p.sendPluginMessage(JoinCommands.INSTANCE, "joincommands:bungeecord", out.toByteArray());
     }
     
     private void execute(Player p, String command) {

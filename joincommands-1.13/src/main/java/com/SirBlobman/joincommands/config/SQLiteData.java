@@ -13,7 +13,7 @@ import com.SirBlobman.joincommands.JoinCommands;
 import com.google.common.collect.Lists;
 
 public class SQLiteData {
-    private static final String DATABASE_FILE_NAME = "./players.db";
+    private static final String DATABASE_FILE_NAME = "./plugins/JoinCommands/players.db";
     private static final String URL = "jdbc:sqlite:" + DATABASE_FILE_NAME;
     private static Connection CONNECTION;
     public static Connection connectToDatabase() {
@@ -79,7 +79,7 @@ public class SQLiteData {
             PreparedStatement ps0 = conn.prepareStatement(sqlCommand0);
             ps0.setString(1, uuidString);
             ResultSet rs0 = ps0.executeQuery();
-            if(rs0.first()) {
+            if(rs0.next()) {
                 String oldWorldNamesString = rs0.getString("Joined Worlds");
                 List<String> oldWorldNames = Lists.newArrayList(oldWorldNamesString.split("|"));
                 worldNames.addAll(oldWorldNames);
@@ -129,7 +129,7 @@ public class SQLiteData {
             PreparedStatement ps0 = conn.prepareStatement(sqlCommand0);
             ps0.setString(1, uuidString);
             ResultSet rs0 = ps0.executeQuery();
-            if(rs0.first()) {
+            if(rs0.next()) {
                 String worldNamesString = rs0.getString("Joined Worlds");
                 List<String> worldNames = Lists.newArrayList(worldNamesString.split("|"));
                 worldNames = worldNames.stream().distinct().collect(Collectors.toList());

@@ -5,7 +5,7 @@
 
 	<groupId>com.SirBlobman</groupId>
 	<artifactId>joincommands-parent</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<name>Join Commands</name>
 	<description>Execute commands when a player joins your server</description>
 	<packaging>pom</packaging>

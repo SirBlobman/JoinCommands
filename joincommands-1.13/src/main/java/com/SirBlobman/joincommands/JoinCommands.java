@@ -1,9 +1,11 @@
 package com.SirBlobman.joincommands;
 
 import java.io.File;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.SirBlobman.joincommands.config.Config;
 import com.SirBlobman.joincommands.config.JoinCommand;
+import com.SirBlobman.joincommands.config.SQLiteData;
 import com.SirBlobman.joincommands.config.WorldJoinCommand;
 
 /*
@@ -36,7 +39,7 @@ public class JoinCommands extends JavaPlugin implements Listener {
         INSTANCE = this;
         FOLDER = getDataFolder();
         Config.load();
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BC-JoinCommands");
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "joincommands:bungeecord");
         Bukkit.getPluginManager().registerEvents(this, this);
     }
     
@@ -54,6 +57,13 @@ public class JoinCommands extends JavaPlugin implements Listener {
         for(WorldJoinCommand wjc : Config.getWorldCommands(false)) {
             if(wjc.canExecute(player)) wjc.execute(player);
         }
+        
+        World world = player.getWorld();
+        String worldName = world.getName();
+        List<String> worlds = SQLiteData.getJoinedWorldNames(player);
+        if(!worlds.contains(worldName)) {
+            SQLiteData.addJoinedWorld(player, worldName);
+        }
     }
     
     @EventHandler
@@ -61,6 +71,13 @@ public class JoinCommands extends JavaPlugin implements Listener {
         Player player = e.getPlayer();
         for(WorldJoinCommand wjc : Config.getWorldCommands(false)) {
             if(wjc.canExecute(player)) wjc.execute(player);
+        }
+        
+        World world = player.getWorld();
+        String worldName = world.getName();
+        List<String> worlds = SQLiteData.getJoinedWorldNames(player);
+        if(!worlds.contains(worldName)) {
+            SQLiteData.addJoinedWorld(player, worldName);
         }
     }
 }
