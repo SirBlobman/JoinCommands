@@ -93,7 +93,7 @@ public class SQLiteData {
                 }
                 final String newWorldsString = sb1.toString();
                 
-                String sqlCommand1 = "UPDATE `joincommands` SET `Joined Worlds`=? WHERE `UUID`=? LIMIT 1;";
+                String sqlCommand1 = "UPDATE `joincommands` SET `Joined Worlds`=? WHERE `UUID`=?";
                 PreparedStatement ps1 = conn.prepareStatement(sqlCommand1);
                 ps1.setString(1, newWorldsString);
                 ps1.setString(2, uuidString);
