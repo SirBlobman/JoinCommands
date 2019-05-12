@@ -1,0 +1,4 @@
+name: "${project.artifactId}"
+main: "com.SirBlobman.joincommands.bungee.JoinCommands"
+version: "${project.version}"
+author: "SirBlobman"

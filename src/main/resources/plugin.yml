@@ -1,0 +1,8 @@
+name: "${project.artifactId}"
+prefix: "${project.name}"
+version: "${project.version}"
+description: "${project.description}"
+main: "com.SirBlobman.joincommands.bukkit.JoinCommands"
+
+author: "SirBlobman"
+website: "https://www.spigotmc.org/resources/51787/"

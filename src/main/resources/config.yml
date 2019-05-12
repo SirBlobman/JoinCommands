@@ -1,0 +1,75 @@
+# A list of commands to execute when a player joins
+join commands:
+  # This is the command id, its only used internally
+  # You can have as many commands as you want but make sure they are all different
+  # Make sure they are all different
+  exampleCommand1:
+    # This is the actual command that will be executed
+    # Commands are executed in console by default, unless you use a prefix
+    # Do not add an extra "/"
+    # Prefixes:
+    # - [PLAYER]: run the command as the player
+    # - [OP]: run the command as the player, but with OP permissions
+    # - [PBUNGEE]: run the command as the player, but through BungeeCord
+    # - [CBUNGEE]: run the command as the BungeeCord console
+    command: "broadcast Welcome {player}!"
+    
+    # This is the amount of time the plugin will wait before actually sending the command
+    # This delay is in ticks, 20 ticks = 1 second
+    delay: 20
+    
+    # This is the permission required to run the command
+    # Set it to "" for no permission
+    permission: ""
+    
+    # Set this to true to make the command only work the first time a player joins
+    first join only: true
+    
+#  exampleCommand2:
+#    command: "[PLAYER]suicide"
+#    delay: 0
+#    permission: "i.hate.you"
+#    first join only: false
+
+# A list of commands to execute when a player enters a world
+world commands: 
+  # This is the command id, its only used internally
+  # Make sure they are all different
+  exampleWorldCommand1:
+    # This is the actual command that will be executed
+    # Commands are executed in console by default, unless you use a prefix
+    # Do not add an extra "/"
+    # Prefixes:
+    # - [PLAYER]: run the command as the player
+    # - [OP]: run the command as the player, but with OP permissions
+    # - [PBUNGEE]: run the command as the player, but through BungeeCord
+    # - [CBUNGEE]: run the command as the BungeeCord console
+    command: "broadcast Welcome {player}!"
+    
+    # This is the amount of time the plugin will wait before actually sending the command
+    # This delay is in ticks, 20 ticks = 1 second
+    delay: 20
+    
+    # This is the permission required to run the command
+    # Set it to "" for no permission
+    permission: ""
+    
+    # Set this to true to make the command only work the first time a player goes into the world
+    first join only: true
+    
+    # This is the list of worlds that will cause the command to run
+    # To enable all worlds, add "*" to the list
+    worlds: 
+    - "World1"
+    - "World2"
+    - "3"
+    - "world_4"
+    
+#  exampleWorldCommand2:
+#    command: "[PLAYER]suicide"
+#    delay: 0
+#    permission: "i.hate.you"
+#    first join only: false
+#    worlds:
+#    - "*"
+  
