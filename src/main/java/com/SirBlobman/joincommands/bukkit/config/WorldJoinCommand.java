@@ -3,12 +3,17 @@ package com.SirBlobman.joincommands.bukkit.config;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.SirBlobman.joincommands.bukkit.JoinCommands;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public class WorldJoinCommand extends JoinCommand {
     private final List<String> validWorldList;
+    private final boolean firstJoinOnly;
     public WorldJoinCommand(List<String> validWorldList, String command, long delayInTicks, String permission, boolean firstJoinOnly) {
-        super(command, delayInTicks, permission, firstJoinOnly);
+        super(command, delayInTicks, permission, false);
+        this.firstJoinOnly = firstJoinOnly;
         this.validWorldList = validWorldList;
     }
     
@@ -19,7 +24,19 @@ public class WorldJoinCommand extends JoinCommand {
         
         World world = player.getWorld();
         String worldName = world.getName();
-        return this.validWorldList.contains(worldName);
+        if(!this.validWorldList.contains(worldName)) return false;
+        
+        if(this.firstJoinOnly) {
+            try {
+                List<String> joinedWorldList = SQLiteUtil.getJoinedWorlds(player);
+                if(joinedWorldList.contains(worldName)) return false;
+            } catch (SQLException ex) {
+                JoinCommands.INSTANCE.getLogger().info("Failed to get world join list for player '" + player.getName() + "'.");
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     @Override

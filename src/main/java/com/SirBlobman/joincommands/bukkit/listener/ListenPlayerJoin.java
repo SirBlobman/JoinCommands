@@ -1,5 +1,6 @@
 package com.SirBlobman.joincommands.bukkit.listener;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.SirBlobman.joincommands.bukkit.config.Config;
 import com.SirBlobman.joincommands.bukkit.config.JoinCommand;
+import com.SirBlobman.joincommands.bukkit.config.SQLiteUtil;
 import com.SirBlobman.joincommands.bukkit.config.WorldJoinCommand;
 
 import java.util.List;
@@ -30,6 +32,10 @@ public class ListenPlayerJoin implements Listener {
     public void onJoinWorld(PlayerChangedWorldEvent e) {
         Player player = e.getPlayer();
         checkWorld(player);
+        
+        World world = player.getWorld();
+        String worldName = world.getName();
+        SQLiteUtil.addJoinedWorld(player, worldName);
     }
     
     public void checkWorld(Player player) {

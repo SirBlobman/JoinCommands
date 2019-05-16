@@ -7,7 +7,7 @@
 
 	<groupId>com.SirBlobman</groupId>
 	<artifactId>JoinCommands</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>Join Commands</name>
 	<description>Execute commands when a player joins your server</description>
 
@@ -32,7 +32,7 @@
 	</repositories>
 	
 	<dependencies>
-		<!-- Spigot API 1.8 -->
+		<!-- Spigot API 1.14 -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
