@@ -7,7 +7,7 @@
 
 	<groupId>com.SirBlobman</groupId>
 	<artifactId>JoinCommands</artifactId>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<name>Join Commands</name>
 	<description>Execute commands when a player joins your server</description>
 
@@ -48,6 +48,14 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- SirBlobmanAPI -->
+		<dependency>
+			<groupId>com.SirBlobman.api</groupId>
+			<artifactId>SirBlobmanAPI</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -57,5 +65,22 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.1</version>
+				
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

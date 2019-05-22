@@ -97,7 +97,7 @@ public class JoinCommand {
             output.writeUTF(command);
             byte[] message = output.toByteArray();
             
-            String channel = "joincommands:" + (asConsole ? "bungee-console" : "bungee-player");
+            String channel = asConsole ? JoinCommands.INSTANCE.getBungeeCordConsoleChannel() : JoinCommands.INSTANCE.getBungeeCordPlayerChannel();
             player.sendPluginMessage(JoinCommands.INSTANCE, channel, message);
         } catch(Exception ex) {
             JoinCommands.INSTANCE.getLogger().warning("Failed to execute bungee command, is bungeecord linked correctly?");

@@ -20,8 +20,12 @@ public class JoinCommands extends Plugin implements Listener {
     @Override
     public void onEnable() {
         ProxyServer server = ProxyServer.getInstance();
+        
         server.registerChannel("joincommands:bungee-console");
+        server.registerChannel("jc:bc");
+        
         server.registerChannel("joincommands:bungee-player");
+        server.registerChannel("jc:bp");
         
         server.getPluginManager().registerListener(this, this);
     }
@@ -29,7 +33,7 @@ public class JoinCommands extends Plugin implements Listener {
     @EventHandler(priority=EventPriority.LOWEST)
     public void onMessage(PluginMessageEvent e) {
         String tag = e.getTag();
-        if(!tag.startsWith("joincommands:")) return;
+        if(!tag.startsWith("joincommands:") && !tag.startsWith("jc:")) return;
         
         try {
             byte[] data = e.getData();
@@ -42,13 +46,13 @@ public class JoinCommands extends Plugin implements Listener {
             ProxyServer server = ProxyServer.getInstance();
             PluginManager pm = server.getPluginManager();
             
-            if(tag.endsWith("bungee-console")) {
+            if(tag.endsWith("bungee-console") || tag.endsWith("bc")) {
                 CommandSender console = server.getConsole();
                 pm.dispatchCommand(console, line);
                 return;
             }
             
-            if(tag.endsWith("bungee-player")) {
+            if(tag.endsWith("bungee-player") || tag.endsWith("bp")) {
                 Connection connection = e.getReceiver();
                 String playerName = connection.toString();
                 
