@@ -83,7 +83,7 @@ public class JoinCommand {
         if(event.isCancelled()) return;
         
         try{
-            command = event.getMessage();
+            command = event.getMessage().substring(1);
             player.performCommand(command);
         } catch(Exception ex) {
             JoinCommands.INSTANCE.getLogger().warning("An error occurred while executing the command '" + command + "'.");
