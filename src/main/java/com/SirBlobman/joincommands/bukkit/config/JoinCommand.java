@@ -18,7 +18,7 @@ public class JoinCommand {
         this.command = command;
         this.commandDelay = delayInTicks;
         this.permission = permission;
-        this.usePermission = (permission != null && permission.isEmpty());
+        this.usePermission = (permission != null && !permission.isEmpty());
         this.firstJoinOnly = firstJoinOnly;
     }
     

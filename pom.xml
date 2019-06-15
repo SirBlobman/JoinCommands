@@ -7,7 +7,7 @@
 
 	<groupId>com.SirBlobman</groupId>
 	<artifactId>JoinCommands</artifactId>
-	<version>1.1.1</version>
+	<version>1.2.0</version>
 	<name>Join Commands</name>
 	<description>Execute commands when a player joins your server</description>
 
