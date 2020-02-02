@@ -1,8 +1,18 @@
-name: "${project.artifactId}"
-prefix: "${project.name}"
-version: "${project.version}"
-description: "${project.description}"
-main: "com.SirBlobman.joincommands.bukkit.JoinCommands"
+name: "${plugin.name}"
+prefix: "${plugin.prefix}"
+description: "${plugin.description}"
 
+main: "${plugin.bukkitMain}"
+version: "${plugin.version}"
 author: "SirBlobman"
-website: "https://www.spigotmc.org/resources/51787/"
+
+commands:
+  join-commands:
+    description: "Main command for the JoinCommands plugin."
+    usage: "/<command> reload"
+    permission: "join.commands.reload"
+
+permissions:
+  join.commands.reload:
+    description: "Allow access to the '/join-commands' command."
+    default: op

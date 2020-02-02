@@ -1,4 +1,7 @@
-name: "${project.artifactId}"
-main: "com.SirBlobman.joincommands.bungee.JoinCommands"
-version: "${project.version}"
+name: "${plugin.name}"
+prefix: "${plugin.prefix}"
+description: "${plugin.description}"
+
+main: "${plugin.bungeeMain}"
+version: "${plugin.version}"
 author: "SirBlobman"
