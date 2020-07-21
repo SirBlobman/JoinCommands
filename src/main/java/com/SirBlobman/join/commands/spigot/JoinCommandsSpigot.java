@@ -1,27 +1,30 @@
 package com.SirBlobman.join.commands.spigot;
 
-import com.SirBlobman.api.SirBlobmanAPI;
+import com.SirBlobman.api.configuration.PlayerDataManager;
 import com.SirBlobman.join.commands.spigot.listener.ListenerJoinCommands;
 import com.SirBlobman.join.commands.spigot.manager.CommandManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
+import org.bukkit.event.Listener;
+
 public class JoinCommandsSpigot extends JavaPlugin {
-    private final SirBlobmanAPI sirBlobmanAPI = new SirBlobmanAPI(this);
-    private final CommandManager commandManager = new CommandManager(this);
+    private final PlayerDataManager<JoinCommandsSpigot> playerDataManager;
+    private final CommandManager commandManager;
+    
+    public JoinCommandsSpigot() {
+        this.playerDataManager = new PlayerDataManager<>(this);
+        this.commandManager = new CommandManager(this);
+    }
     
     @Override
     public void onEnable() {
         saveDefaultConfig();
-    
-        CommandManager commandManager = getCommandManager();
-        commandManager.loadServerJoinCommands();
-        commandManager.loadWorldJoinCommands();
+        reloadConfig();
         
         registerBungeeCordChannels();
         registerListener();
@@ -36,8 +39,8 @@ public class JoinCommandsSpigot extends JavaPlugin {
         commandManager.loadWorldJoinCommands();
     }
     
-    public SirBlobmanAPI getSirBlobmanAPI() {
-        return this.sirBlobmanAPI;
+    public PlayerDataManager<?> getPlayerDataManager() {
+        return this.playerDataManager;
     }
     
     public CommandManager getCommandManager() {
@@ -46,7 +49,7 @@ public class JoinCommandsSpigot extends JavaPlugin {
     
     private void registerBungeeCordChannels() {
         FileConfiguration config = getConfig();
-        if(!config.getBoolean("options.bungeecord-hook")) return;
+        if(!config.getBoolean("spigot-options.bungeecord-hook")) return;
         
         Messenger messenger = Bukkit.getMessenger();
         messenger.registerOutgoingPluginChannel(this, "jc:console");

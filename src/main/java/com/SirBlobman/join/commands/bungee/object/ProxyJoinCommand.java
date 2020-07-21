@@ -1,6 +1,7 @@
 package com.SirBlobman.join.commands.bungee.object;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.SirBlobman.join.commands.bungee.JoinCommandsBungee;
@@ -11,19 +12,16 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 
-import org.apache.commons.lang.Validate;
-
 public class ProxyJoinCommand {
     private final List<String> commandList;
     private final String permission;
     private final boolean firstJoinOnly;
     private final long delay;
     public ProxyJoinCommand(List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
-        Validate.notEmpty(commandList, "commandList must not be empty or null.");
-        Validate.notNull(permission, "permission must not be null.");
+        this.commandList = Objects.requireNonNull(commandList, "commandList must not be null!");
+        if(this.commandList.isEmpty()) throw new IllegalArgumentException("commandList must no be empty!");
+        this.permission = Objects.requireNonNull(permission, "permission must not be null!");
         
-        this.commandList = commandList;
-        this.permission = permission;
         this.firstJoinOnly = firstJoinOnly;
         this.delay = delay;
     }

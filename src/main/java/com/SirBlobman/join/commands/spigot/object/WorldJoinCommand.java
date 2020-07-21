@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.SirBlobman.api.SirBlobmanAPI;
+import com.SirBlobman.api.configuration.PlayerDataManager;
 import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
 
 import org.bukkit.Bukkit;
@@ -12,10 +12,11 @@ import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
+
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -47,8 +48,8 @@ public class WorldJoinCommand {
         String worldName = world.getName();
         
         if(this.firstJoinOnly) {
-            SirBlobmanAPI api = plugin.getSirBlobmanAPI();
-            YamlConfiguration config = api.getDataFile(player);
+            PlayerDataManager<?> playerDataManager = plugin.getPlayerDataManager();
+            YamlConfiguration config = playerDataManager.getData(player);
             
             List<String> joinedWorldNameList = config.getStringList("join-commands.played-before-world-list");
             if(joinedWorldNameList.contains(worldName)) return false;

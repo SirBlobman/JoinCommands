@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +21,7 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
+import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -98,10 +100,16 @@ public class ListenerJoinCommands implements Listener {
         CommandManager commandManager = this.plugin.getCommandManager();
         List<ProxyJoinCommand> proxyJoinCommandList = commandManager.getProxyJoinCommandList();
         
+        ProxyServer proxy = this.plugin.getProxy();
+        TaskScheduler scheduler = proxy.getScheduler();
+        
         for(ProxyJoinCommand command : proxyJoinCommandList) {
             if(!command.shouldBeExecutedFor(this.plugin, player)) continue;
-            
-            command.executeFor(this.plugin, player);
+    
+            long delay = command.getDelay();
+            long seconds = (delay * 20);
+            Runnable task = () -> command.executeFor(this.plugin, player);
+            scheduler.schedule(plugin, task, seconds, TimeUnit.SECONDS);
         }
     }
     
