@@ -28,7 +28,6 @@ public class WorldJoinCommand {
     public WorldJoinCommand(List<String> worldNameList, List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
         Validate.notNull(worldNameList, "worldNameList must not be null.");
         Validate.notEmpty(commandList, "commandList must not be empty or null.");
-        Validate.notNull(permission, "permission must not be null.");
         
         this.worldNameList = worldNameList;
         this.commandList = commandList;
@@ -53,7 +52,7 @@ public class WorldJoinCommand {
             if(joinedWorldNameList.contains(worldName)) return false;
         }
         
-        if(!this.permission.isEmpty()) {
+        if(this.permission != null && !this.permission.isEmpty()) {
             Permission permission = new Permission(this.permission, "A permission that allows a specific world join command to be executed.", PermissionDefault.FALSE);
             if(!player.hasPermission(permission)) return false;
         }

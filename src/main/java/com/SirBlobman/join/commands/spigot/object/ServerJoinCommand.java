@@ -26,7 +26,6 @@ public class ServerJoinCommand {
     private final long delay;
     public ServerJoinCommand(List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
         Validate.notEmpty(commandList, "commandList must not be empty or null.");
-        Validate.notNull(permission, "permission must not be null.");
         
         this.commandList = commandList;
         this.permission = permission;
@@ -49,7 +48,7 @@ public class ServerJoinCommand {
             if(hasJoinedBefore) return false;
         }
         
-        if(!this.permission.isEmpty()) {
+        if(this.permission != null && !this.permission.isEmpty()) {
             Permission permission = new Permission(this.permission, "A permission that allows a specific server join command to be executed.", PermissionDefault.FALSE);
             return player.hasPermission(permission);
         }
