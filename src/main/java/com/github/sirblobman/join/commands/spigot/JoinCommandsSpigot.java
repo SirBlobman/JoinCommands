@@ -1,8 +1,5 @@
-package com.SirBlobman.join.commands.spigot;
+package com.github.sirblobman.join.commands.spigot;
 
-import com.SirBlobman.api.configuration.PlayerDataManager;
-import com.SirBlobman.join.commands.spigot.listener.ListenerJoinCommands;
-import com.SirBlobman.join.commands.spigot.manager.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -10,13 +7,18 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
+import com.github.sirblobman.api.configuration.PlayerDataManager;
+import com.github.sirblobman.join.commands.spigot.command.CommandJoinCommands;
+import com.github.sirblobman.join.commands.spigot.listener.ListenerJoinCommands;
+import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
+
 public class JoinCommandsSpigot extends JavaPlugin {
-    private final PlayerDataManager<JoinCommandsSpigot> playerDataManager;
+    private final PlayerDataManager playerDataManager;
     private final CommandManager commandManager;
     public boolean hookPlaceholderAPI;
     
     public JoinCommandsSpigot() {
-        this.playerDataManager = new PlayerDataManager<>(this);
+        this.playerDataManager = new PlayerDataManager(this);
         this.commandManager = new CommandManager(this);
     }
     
@@ -28,6 +30,8 @@ public class JoinCommandsSpigot extends JavaPlugin {
         registerBungeeCordChannels();
         registerHooks();
         registerListener();
+
+        new CommandJoinCommands(this).register();
     }
 
     @Override
@@ -39,7 +43,7 @@ public class JoinCommandsSpigot extends JavaPlugin {
         commandManager.loadWorldJoinCommands();
     }
     
-    public PlayerDataManager<?> getPlayerDataManager() {
+    public PlayerDataManager getPlayerDataManager() {
         return this.playerDataManager;
     }
     

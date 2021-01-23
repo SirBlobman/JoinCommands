@@ -1,10 +1,7 @@
-package com.SirBlobman.join.commands.spigot.listener;
+package com.github.sirblobman.join.commands.spigot.listener;
 
-import com.SirBlobman.api.configuration.PlayerDataManager;
-import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
-import com.SirBlobman.join.commands.spigot.manager.CommandManager;
-import com.SirBlobman.join.commands.spigot.object.ServerJoinCommand;
-import com.SirBlobman.join.commands.spigot.object.WorldJoinCommand;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,7 +13,11 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.List;
+import com.github.sirblobman.api.configuration.PlayerDataManager;
+import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
+import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
+import com.github.sirblobman.join.commands.spigot.object.ServerJoinCommand;
+import com.github.sirblobman.join.commands.spigot.object.WorldJoinCommand;
 
 public class ListenerJoinCommands implements Listener {
     private final JoinCommandsSpigot plugin;
@@ -79,26 +80,26 @@ public class ListenerJoinCommands implements Listener {
     private void setJoinedServerBefore(Player player) {
         if(player == null) return;
     
-        PlayerDataManager<?> playerDataManager = this.plugin.getPlayerDataManager();
-        YamlConfiguration config = playerDataManager.getData(player);
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        YamlConfiguration config = playerDataManager.get(player);
         if(config.getBoolean("join-commands.played-before")) return;
         
         config.set("join-commands.played-before", true);
-        playerDataManager.saveData(player);
+        playerDataManager.save(player);
     }
     
     private void setJoinedWorldBefore(Player player, World world) {
         if(player == null || world == null) return;
         String worldName = world.getName();
         
-        PlayerDataManager<?> playerDataManager = this.plugin.getPlayerDataManager();
-        YamlConfiguration config = playerDataManager.getData(player);
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        YamlConfiguration config = playerDataManager.get(player);
         
         List<String> worldList = config.getStringList("join-commands.played-before-world-list");
         if(worldList.contains(worldName)) return;
         worldList.add(worldName);
         
         config.set("join-commands.played-before-world-list", worldList);
-        playerDataManager.saveData(player);
+        playerDataManager.save(player);
     }
 }

@@ -1,11 +1,9 @@
-package com.SirBlobman.join.commands.spigot.object;
+package com.github.sirblobman.join.commands.spigot.object;
 
-import com.SirBlobman.api.configuration.PlayerDataManager;
-import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.apache.commons.lang.Validate;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
@@ -16,9 +14,13 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.github.sirblobman.api.configuration.PlayerDataManager;
+import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang.Validate;
 
 public class WorldJoinCommand {
     private final List<String> worldNameList, commandList;
@@ -45,10 +47,10 @@ public class WorldJoinCommand {
         String worldName = world.getName();
         
         if(this.firstJoinOnly) {
-            PlayerDataManager<?> playerDataManager = plugin.getPlayerDataManager();
-            YamlConfiguration config = playerDataManager.getData(player);
+            PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+            YamlConfiguration configuration = playerDataManager.get(player);
             
-            List<String> joinedWorldNameList = config.getStringList("join-commands.played-before-world-list");
+            List<String> joinedWorldNameList = configuration.getStringList("join-commands.played-before-world-list");
             if(joinedWorldNameList.contains(worldName)) return false;
         }
         
@@ -128,7 +130,8 @@ public class WorldJoinCommand {
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         Bukkit.dispatchCommand(console, command);
     }
-    
+
+    @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeePlayer(JoinCommandsSpigot plugin, Player player, String command) {
         if(plugin == null || player == null || command == null || command.isEmpty()) return;
         
@@ -143,7 +146,8 @@ public class WorldJoinCommand {
             logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:player'. Is the BungeeCord proxy online?", ex);
         }
     }
-    
+
+    @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeeConsole(JoinCommandsSpigot plugin, Player player, String command) {
         if(plugin == null || player == null || command == null || command.isEmpty()) return;
         

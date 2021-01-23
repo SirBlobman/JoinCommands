@@ -1,8 +1,14 @@
-package com.SirBlobman.join.commands.bungee.listener;
+package com.github.sirblobman.join.commands.bungee.listener;
 
-import com.SirBlobman.join.commands.bungee.JoinCommandsBungee;
-import com.SirBlobman.join.commands.bungee.manager.CommandManager;
-import com.SirBlobman.join.commands.bungee.object.ProxyJoinCommand;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.Connection;
@@ -16,14 +22,9 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
+import com.github.sirblobman.join.commands.bungee.manager.CommandManager;
+import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
 
 public class ListenerJoinCommands implements Listener {
     private final JoinCommandsBungee plugin;

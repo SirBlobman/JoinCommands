@@ -1,14 +1,15 @@
-package com.SirBlobman.join.commands.bungee.manager;
-
-import com.SirBlobman.join.commands.bungee.JoinCommandsBungee;
-import com.SirBlobman.join.commands.bungee.object.ProxyJoinCommand;
-import net.md_5.bungee.config.Configuration;
+package com.github.sirblobman.join.commands.bungee.manager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.md_5.bungee.config.Configuration;
+
+import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
+import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
 
 public class CommandManager {
     private final JoinCommandsBungee plugin;

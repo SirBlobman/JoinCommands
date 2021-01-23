@@ -1,14 +1,4 @@
-package com.SirBlobman.join.commands.bungee;
-
-import com.SirBlobman.join.commands.bungee.listener.ListenerJoinCommands;
-import com.SirBlobman.join.commands.bungee.manager.CommandManager;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginManager;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+package com.github.sirblobman.join.commands.bungee;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +8,17 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginManager;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+
+import com.github.sirblobman.join.commands.bungee.listener.ListenerJoinCommands;
+import com.github.sirblobman.join.commands.bungee.manager.CommandManager;
 
 public class JoinCommandsBungee extends Plugin {
     private final CommandManager commandManager = new CommandManager(this);
@@ -45,10 +46,13 @@ public class JoinCommandsBungee extends Plugin {
     }
     
     public void saveConfig() {
-        File pluginFolder = getDataFolder();
-        if(!pluginFolder.exists()) pluginFolder.mkdirs();
-        
         try {
+            File pluginFolder = getDataFolder();
+            if(!pluginFolder.exists()) {
+                boolean makeFolder = pluginFolder.mkdirs();
+                if(!makeFolder) throw new IOException("Failed to create plugin folder for JoinCommands.");
+            }
+
             ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
             File file = new File(pluginFolder, "config.yml");
             provider.save(this.config, file);
