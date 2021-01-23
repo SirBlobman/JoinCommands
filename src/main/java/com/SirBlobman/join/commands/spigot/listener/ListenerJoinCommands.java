@@ -1,24 +1,22 @@
 package com.SirBlobman.join.commands.spigot.listener;
 
-import java.util.List;
-
 import com.SirBlobman.api.configuration.PlayerDataManager;
 import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
 import com.SirBlobman.join.commands.spigot.manager.CommandManager;
 import com.SirBlobman.join.commands.spigot.object.ServerJoinCommand;
 import com.SirBlobman.join.commands.spigot.object.WorldJoinCommand;
-
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitScheduler;
+
+import java.util.List;
 
 public class ListenerJoinCommands implements Listener {
     private final JoinCommandsSpigot plugin;

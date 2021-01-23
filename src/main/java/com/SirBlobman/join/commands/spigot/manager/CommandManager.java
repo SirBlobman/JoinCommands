@@ -1,17 +1,16 @@
 package com.SirBlobman.join.commands.spigot.manager;
 
+import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
+import com.SirBlobman.join.commands.spigot.object.ServerJoinCommand;
+import com.SirBlobman.join.commands.spigot.object.WorldJoinCommand;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
-import com.SirBlobman.join.commands.spigot.object.ServerJoinCommand;
-import com.SirBlobman.join.commands.spigot.object.WorldJoinCommand;
-
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class CommandManager {
     private final JoinCommandsSpigot plugin;

@@ -3,18 +3,17 @@ package com.SirBlobman.join.commands.spigot;
 import com.SirBlobman.api.configuration.PlayerDataManager;
 import com.SirBlobman.join.commands.spigot.listener.ListenerJoinCommands;
 import com.SirBlobman.join.commands.spigot.manager.CommandManager;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
-import org.bukkit.event.Listener;
-
 public class JoinCommandsSpigot extends JavaPlugin {
     private final PlayerDataManager<JoinCommandsSpigot> playerDataManager;
     private final CommandManager commandManager;
+    public boolean hookPlaceholderAPI;
     
     public JoinCommandsSpigot() {
         this.playerDataManager = new PlayerDataManager<>(this);
@@ -27,9 +26,10 @@ public class JoinCommandsSpigot extends JavaPlugin {
         reloadConfig();
         
         registerBungeeCordChannels();
+        registerHooks();
         registerListener();
     }
-    
+
     @Override
     public void reloadConfig() {
         super.reloadConfig();
@@ -45,6 +45,11 @@ public class JoinCommandsSpigot extends JavaPlugin {
     
     public CommandManager getCommandManager() {
         return this.commandManager;
+    }
+
+    private void registerHooks() {
+        FileConfiguration config = getConfig();
+        hookPlaceholderAPI = config.getBoolean("spigot-options.placeholderapi-hook", true) && getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
     
     private void registerBungeeCordChannels() {

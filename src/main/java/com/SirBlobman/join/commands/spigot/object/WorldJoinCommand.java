@@ -1,26 +1,24 @@
 package com.SirBlobman.join.commands.spigot.object;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.SirBlobman.api.configuration.PlayerDataManager;
 import com.SirBlobman.join.commands.spigot.JoinCommandsSpigot;
-
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import org.apache.commons.lang.Validate;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WorldJoinCommand {
     private final List<String> worldNameList, commandList;
@@ -69,32 +67,34 @@ public class WorldJoinCommand {
         
         for(String command : this.commandList) {
             command = command.replace("{player}", playerName);
+
+            if(plugin.hookPlaceholderAPI) {
+                PlaceholderAPI.setPlaceholders(player, command);
+            }
             
-            if(command.toLowerCase().startsWith("[player]")) {
+            else if(command.toLowerCase().startsWith("[player]")) {
                 command = command.substring("[player]".length());
                 runAsPlayer(player, command);
-                continue;
             }
             
-            if(command.toLowerCase().startsWith("[op]")) {
+            else if(command.toLowerCase().startsWith("[op]")) {
                 command = command.substring("[op]".length());
                 runAsOp(player, command);
-                continue;
             }
             
-            if(command.toLowerCase().startsWith("[bplayer]")) {
+            else if(command.toLowerCase().startsWith("[bplayer]")) {
                 command = command.substring("[bplayer]".length());
                 runAsBungeePlayer(plugin, player, command);
-                continue;
             }
             
-            if(command.toLowerCase().startsWith("[bconsole]")) {
+            else if(command.toLowerCase().startsWith("[bconsole]")) {
                 command = command.substring("[bconsole]".length());
                 runAsBungeeConsole(plugin, player, command);
-                continue;
             }
             
-            runAsConsole(command);
+            else {
+                runAsConsole(command);
+            }
         }
     }
     

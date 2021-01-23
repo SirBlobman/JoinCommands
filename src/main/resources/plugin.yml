@@ -6,6 +6,9 @@ main: "${plugin.bukkitMain}"
 version: "${plugin.version}"
 author: "SirBlobman"
 
+softdepend:
+  - PlaceholderAPI
+
 commands:
   join-commands:
     description: "Main command for the JoinCommands plugin."

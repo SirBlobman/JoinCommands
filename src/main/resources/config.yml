@@ -7,6 +7,9 @@ spigot-options:
   # Does JoinCommands need to hook into BungeeCord?
   # This requires you to install JoinCommands on the BungeeCord proxy as well.
   bungeecord-hook: false
+  # Does JoinCommands hook in to PlaceholderAPI
+  # This will allow you to use their placeholders in commands
+  placeholderapi-hook: true
 
 # This is a set of commands that will be executed when a player joins the spigot server.
 server-join-commands:

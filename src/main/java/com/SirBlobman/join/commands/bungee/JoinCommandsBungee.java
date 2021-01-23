@@ -1,5 +1,15 @@
 package com.SirBlobman.join.commands.bungee;
 
+import com.SirBlobman.join.commands.bungee.listener.ListenerJoinCommands;
+import com.SirBlobman.join.commands.bungee.manager.CommandManager;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginManager;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,17 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.SirBlobman.join.commands.bungee.listener.ListenerJoinCommands;
-import com.SirBlobman.join.commands.bungee.manager.CommandManager;
-
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginManager;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 public class JoinCommandsBungee extends Plugin {
     private final CommandManager commandManager = new CommandManager(this);
