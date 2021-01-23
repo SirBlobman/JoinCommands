@@ -1,16 +1,20 @@
-# Eclipse IDE
-.settings/
-bin/
-.project
-.classpath
+# Mac OSX
+.DS_Store
+._*
+
+# Java
+*.class
+*.jar
 
 # IntelliJ IDEA
 .idea/
 *.iml
 
-# Java
-*.class
-*.jar
+# Eclipse IDE
+.settings/
+bin/
+.classpath
+.project
 
 # Maven
 target/
