@@ -65,7 +65,7 @@ public class ServerJoinCommand {
         for(String command : this.commandList) {
             command = command.replace("{player}", playerName);
 
-            if(plugin.hookPlaceholderAPI) {
+            if(plugin.usePlaceholderAPIHook()) {
                 command = PlaceholderAPI.setPlaceholders(player, command);
             }
             

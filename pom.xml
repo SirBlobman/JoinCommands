@@ -11,35 +11,21 @@
     
     <properties>
         <java.version>1.8</java.version>
+        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
+        <bungee.version>1.16-R0.4-SNAPSHOT</bungee.version>
+
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        
-        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
-        <bungee.version>1.15-SNAPSHOT</bungee.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <plugin.name>JoinCommands</plugin.name>
         <plugin.prefix>${project.name}</plugin.prefix>
         <plugin.description>${project.description}</plugin.description>
+        <plugin.version>2.0.0</plugin.version>
         
         <plugin.bukkitMain>com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot</plugin.bukkitMain>
         <plugin.bungeeMain>com.github.sirblobman.join.commands.bungee.JoinCommandsBungee</plugin.bungeeMain>
-        <plugin.version>2.0.0-Beta</plugin.version>
     </properties>
-    
-    <distributionManagement>
-        <!-- CodeMC Releases -->
-        <repository>
-            <id>codemc-releases</id>
-            <url>https://repo.codemc.io/repository/maven-releases/</url>
-        </repository>
-
-        <!-- CodeMC Snapshots -->
-        <snapshotRepository>
-            <id>codemc-snapshots</id>
-            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     
     <repositories>
         <!-- SpigotMC Repository -->
@@ -109,6 +95,20 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <!-- CodeMC Releases -->
+        <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.io/repository/maven-releases/</url>
+        </repository>
+
+        <!-- CodeMC Snapshots -->
+        <snapshotRepository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
     
     <build>
         <finalName>${plugin.name}-${plugin.version}</finalName>

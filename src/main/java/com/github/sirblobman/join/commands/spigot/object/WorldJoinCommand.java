@@ -69,7 +69,7 @@ public class WorldJoinCommand {
         for(String command : this.commandList) {
             command = command.replace("{player}", playerName);
 
-            if(plugin.hookPlaceholderAPI) {
+            if(plugin.usePlaceholderAPIHook()) {
                 PlaceholderAPI.setPlaceholders(player, command);
             }
             

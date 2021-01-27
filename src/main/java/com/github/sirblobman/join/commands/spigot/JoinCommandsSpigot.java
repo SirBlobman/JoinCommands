@@ -15,8 +15,6 @@ import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
 public class JoinCommandsSpigot extends JavaPlugin {
     private final PlayerDataManager playerDataManager;
     private final CommandManager commandManager;
-    public boolean hookPlaceholderAPI;
-    
     public JoinCommandsSpigot() {
         this.playerDataManager = new PlayerDataManager(this);
         this.commandManager = new CommandManager(this);
@@ -28,7 +26,6 @@ public class JoinCommandsSpigot extends JavaPlugin {
         reloadConfig();
         
         registerBungeeCordChannels();
-        registerHooks();
         registerListener();
 
         new CommandJoinCommands(this).register();
@@ -51,9 +48,11 @@ public class JoinCommandsSpigot extends JavaPlugin {
         return this.commandManager;
     }
 
-    private void registerHooks() {
+    public boolean usePlaceholderAPIHook() {
         FileConfiguration config = getConfig();
-        hookPlaceholderAPI = config.getBoolean("spigot-options.placeholderapi-hook", true) && getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+        boolean useHook = config.getBoolean("spigot-options.placeholderapi-hook", true);
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        return (useHook && pluginManager.isPluginEnabled("PlaceholderAPI"));
     }
     
     private void registerBungeeCordChannels() {
