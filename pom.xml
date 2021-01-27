@@ -7,7 +7,7 @@
     <version>2.0.0-SNAPSHOT</version>
     
     <name>Join Commands</name>
-    <description>A useful spigot plugin to execute commands when players join a bungee network, a server, or a world.</description>
+    <description>A useful plugin to execute commands when players join a bungee network, a server, or a world.</description>
     
     <properties>
         <java.version>1.8</java.version>

@@ -1,0 +1,175 @@
+[SIZE=5][B]Supported Spigot Versions:[/B][/SIZE]
+1.8.8, 1.9.4, 1.10.2, 1.11.2, 1.13.2, 1.14.4, 1.15.2, 1.16.5
+
+[SIZE=5][B]Supported BungeeCord Versions:[/B][/SIZE]
+1.16
+
+[SIZE=5][COLOR=#FF0000][B]Description:[/B][/COLOR][/SIZE]
+Join Commands is a plugin for Spigot and BungeeCord that allows you to execute commands for the following events:
+[LIST]
+[*]A player joins the BungeeCord proxy.
+[*]A player joins the Spigot server.
+[*]A player joins a world within a Spigot server.
+[/LIST]
+
+[SIZE=5][COLOR=#FF0000][B]Installation:[/B][/COLOR][/SIZE]
+[B]Spigot Server:[/B]
+[LIST=1]
+[*]Download the JAR from the Spigot Page linked above.
+[*]Upload the JAR file to your server's `/plugins/` folder.
+[*]Restart your server. Reloading and Plugman are not supported.
+[*]A `config.yml` file should be generated in your server's `/plugins/` folder. Edit this file and add/remove the commands you want.
+[*]Restart your server one more time. You can also do `/join-commands reload` but a restart is recommended.
+[/LIST]
+
+[B]BungeeCord Server:[/B]
+[LIST=1]
+[*]Download the JAR from the Spigot Page linked above.
+[*]Install the plugin on all your spigot servers that are linked to the BungeeCord.
+[*]Upload the JAR file to your BungeeCord proxy's `/plugins/` folder.
+[*]Restart the proxy all servers linked to it so that the channels can be setup properly.
+[/LIST]
+
+[SIZE=5][COLOR=#FF0000][B]Commands:[/B][/COLOR][/SIZE]
+[LIST]
+[*][B]/join-commands reload[/B]: Reload the configuration file (spigot only)
+[/LIST]
+
+[SIZE=5][COLOR=#FF0000][B]Configuration:[/B][/COLOR][/SIZE]
+[SPOILER='config.yml']
+[CODE=YAML]
+# Default Configuration for Join Commands Spigot
+# Made by SirBlobman for v${plugin.version}
+
+# Start Spigot Options
+# These options are only used on the server
+spigot-options:
+  # Does JoinCommands need to hook into BungeeCord?
+  # This requires you to install JoinCommands on the BungeeCord proxy as well.
+  bungeecord-hook: false
+
+  # Does JoinCommands hook in to PlaceholderAPI
+  # This will allow you to use their placeholders in commands
+  placeholderapi-hook: true
+
+# This is a set of commands that will be executed when a player joins the spigot server.
+server-join-commands:
+  # 'exampleOne' is the command ID. This can be any valid YML section string, but they must all be different
+  exampleOne:
+    # This is the list of commands that will be executed if the conditions are matched.
+    #
+    # Valid Placeholders:
+    # - {player} - The name of the player that joined
+    #
+    # Valid Prefixes:
+    # - no prefix - Execute the command as console (e.g. "eco give {player} 100")
+    # - [PLAYER] - Execute the command as a player (e.g. "[PLAYER]kit tools")
+    # - [OP] - Execute the command as the player, but with OP permissions (e.g. "[OP]warp opsOnlyArea")
+    # - [BPLAYER] - Execute the command as the player, but through the BungeeCord Proxy (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
+    # - [BCONSOLE] - Execute the command as the BungeeCord Proxy console (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
+    command-list:
+      - "msg {player} Hello!"
+      - "say {player} joined the server!"
+
+    # What permission does the player need to have before this command to be executed?
+    # Leave it blank for no permission check
+    # This is not the permission for the 'command-list'
+    permission: ""
+
+    # Should this command only be executed when the player first joins the server?
+    # Once a player has joined, a data file will be created for them and any commands with 'first-join-only: true' will not be executed for them
+    first-join-only: true
+
+    # How long should JoinCommands wait (in ticks) to execute the command list?
+    # 20 ticks = 1 second
+    delay: 20
+
+  example2:
+    permission: "i.hate.you"
+    first-join-only: false
+    delay: 0
+    command-list:
+      - "kill {player}"
+
+  example3:
+    permission: "donator.free.money"
+    first-join-only: false
+    delay: 100
+    command-list:
+      - "msg {player} You are a donator, so you get free money for joining."
+      - "eco give {player} 100"
+
+world-join-commands:
+  exampleOneWorld:
+    # This is the list of worlds that this command will be executed in
+    world-list:
+      - "world"
+      - "world_nether"
+      - "world_the_end"
+
+    # Valid Placeholders:
+    # - {player} - The name of the player that joined
+    # - {world} - The name of the world that the player joined
+    #
+    # Valid Prefixes:
+    # - no prefix - Execute the command as console (e.g. "eco give {player} 100")
+    # - [PLAYER] - Execute the command as a player (e.g. "[PLAYER]kit tools")
+    # - [OP] - Execute the command as the player, but with OP permissions (e.g. "[OP]warp opsOnlyArea")
+    # - [BPLAYER] - Execute the command as the player, but through the BungeeCord Proxy (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
+    # - [BCONSOLE] - Execute the command as the BungeeCord Proxy console (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
+    command-list:
+      - "msg {player} You are now in {world}"
+
+    delay: 0
+
+    # Should this command only be executed when the player first joins the world?
+    # Once a player has joined a world, a data file will be created for them and any commands with 'first-join-only: true' will not be executed for them
+    first-join-only: false
+    permission: ""
+
+  exampleWorld2:
+    world-list:
+      - "world"
+
+    command-list:
+      - "msg {player} welcome back to the main world"
+
+    delay: 20
+    first-join-only: false
+    permission: ""
+# End Spigot Options
+
+# Start BungeeCord Options
+# These options are only used on the proxy
+proxy-join-commands:
+  exampleOneProxy:
+    permission: "always.survival"
+    first-join-only: false
+    delay: 100
+
+    # Valid Placeholders:
+    # - {player} - The name of the player that joined
+    #
+    # Valid Prefixes:
+    # - no prefix - Execute the command as the proxy console (e.g. "eco give {player} 100")
+    # - [PLAYER] - Execute the command as the proxy player (e.g. "[PLAYER]kit tools")
+    command-list:
+      - "[PLAYER]server survival"
+
+  exampleProxy2:
+    permission: ""
+    first-join-only: true
+    delay: 20
+    command-list:
+      - "send {player} lobby"
+
+# End BungeeCord Options
+[/CODE]
+[/SPOILER]
+
+[SIZE=5][B][COLOR=#FF0000]Help and Support:[/COLOR][/B][/SIZE]
+Click the image to join my discord for support. You can also join if you have feature requests or if you just want to chat with other users.
+[URL='https://discord.gg/XMg2agT'][IMG]https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png[/IMG][/URL]
+
+[SIZE=5][B][COLOR=#FF0000]Extra Information:[/COLOR][/B][/SIZE]
+Please do not use a review to leave bug reports or errors. I am not able to help you through a review.
