@@ -73,11 +73,11 @@ public class WorldJoinCommand {
                 PlaceholderAPI.setPlaceholders(player, command);
             }
             
-            else if(command.toLowerCase().startsWith("[player]")) {
+            if(command.toLowerCase().startsWith("[player]")) {
                 command = command.substring("[player]".length());
                 runAsPlayer(player, command);
             }
-            
+
             else if(command.toLowerCase().startsWith("[op]")) {
                 command = command.substring("[op]".length());
                 runAsOp(player, command);

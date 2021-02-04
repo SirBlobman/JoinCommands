@@ -54,9 +54,9 @@ public class ListenerJoinCommands implements Listener {
         
         for(ServerJoinCommand command : joinCommandList) {
             if(!command.shouldBeExecutedFor(this.plugin, player)) continue;
-            
-            Runnable task = () -> command.executeFor(this.plugin, player);
+
             long delay = command.getDelay();
+            Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
@@ -70,9 +70,9 @@ public class ListenerJoinCommands implements Listener {
     
         for(WorldJoinCommand command : joinCommandList) {
             if(!command.shouldBeExecutedFor(this.plugin, player, world)) continue;
-    
-            Runnable task = () -> command.executeFor(this.plugin, player);
+
             long delay = command.getDelay();
+            Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
