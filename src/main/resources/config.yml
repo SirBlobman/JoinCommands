@@ -105,7 +105,9 @@ proxy-join-commands:
   exampleOneProxy:
     permission: "always.survival"
     first-join-only: false
-    delay: 100
+
+    # Delay for proxy is in seconds.
+    delay: 5
 
     # Valid Placeholders:
     # - {player} - The name of the player that joined

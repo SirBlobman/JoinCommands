@@ -105,11 +105,10 @@ public class ListenerJoinCommands implements Listener {
         
         for(ProxyJoinCommand command : proxyJoinCommandList) {
             if(!command.shouldBeExecutedFor(this.plugin, player)) continue;
-    
+
             long delay = command.getDelay();
-            long seconds = (delay * 20);
             Runnable task = () -> command.executeFor(this.plugin, player);
-            scheduler.schedule(plugin, task, seconds, TimeUnit.SECONDS);
+            scheduler.schedule(plugin, task, delay, TimeUnit.SECONDS);
         }
     }
     
