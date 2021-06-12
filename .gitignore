@@ -19,6 +19,3 @@ bin/
 # Maven
 target/
 dependency-reduced-pom.xml
-
-# Other Files
-Backup/

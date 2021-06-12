@@ -1,6 +1,7 @@
 package com.github.sirblobman.join.commands.spigot;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -15,6 +16,7 @@ import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
 public class JoinCommandsSpigot extends JavaPlugin {
     private final PlayerDataManager playerDataManager;
     private final CommandManager commandManager;
+
     public JoinCommandsSpigot() {
         this.playerDataManager = new PlayerDataManager(this);
         this.commandManager = new CommandManager(this);
@@ -28,7 +30,10 @@ public class JoinCommandsSpigot extends JavaPlugin {
         registerBungeeCordChannels();
         registerListener();
 
-        new CommandJoinCommands(this).register();
+        CommandJoinCommands commandExecutor = new CommandJoinCommands(this);
+        PluginCommand pluginCommand = getCommand("join-commands");
+        pluginCommand.setExecutor(commandExecutor);
+        pluginCommand.setTabCompleter(commandExecutor);
     }
 
     @Override

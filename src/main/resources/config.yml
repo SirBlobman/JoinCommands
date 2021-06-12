@@ -1,6 +1,10 @@
 # Default Configuration for Join Commands Spigot
 # Made by SirBlobman for v${plugin.version}
 
+# Set this to true if you are trying to resolve an issue or SirBlobman asks you to.
+# This will send extra output to console about the plugin.
+debug-mode: false
+
 # Start Spigot Options
 # These options are only used on the server
 spigot-options:

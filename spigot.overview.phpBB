@@ -1,8 +1,8 @@
 [SIZE=5][B]Supported Spigot Versions:[/B][/SIZE]
-1.8.8, 1.9.4, 1.10.2, 1.11.2, 1.13.2, 1.14.4, 1.15.2, 1.16.5
+1.8.8, 1.9.4, 1.10.2, 1.11.2, 1.13.2, 1.14.4, 1.15.2, 1.16.5, 1.17
 
 [SIZE=5][B]Supported BungeeCord Versions:[/B][/SIZE]
-1.16
+1.17
 
 [SIZE=5][COLOR=#FF0000][B]Description:[/B][/COLOR][/SIZE]
 Join Commands is a plugin for Spigot and BungeeCord that allows you to execute commands for the following events:

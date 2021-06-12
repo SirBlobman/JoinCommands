@@ -7,12 +7,12 @@
     <version>2.0.0-SNAPSHOT</version>
     
     <name>Join Commands</name>
-    <description>A useful plugin to execute commands when players join a bungee network, a server, or a world.</description>
+    <description>A useful plugin to execute commands when players join a bungee proxy, a spigot server, or a world.</description>
     
     <properties>
         <java.version>1.8</java.version>
         <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
-        <bungee.version>1.16-R0.5-SNAPSHOT</bungee.version>
+        <bungee.version>1.17-R0.1-SNAPSHOT</bungee.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -21,7 +21,7 @@
         <plugin.name>JoinCommands</plugin.name>
         <plugin.prefix>${project.name}</plugin.prefix>
         <plugin.description>${project.description}</plugin.description>
-        <plugin.version>2.0.3</plugin.version>
+        <plugin.version>2.0.4</plugin.version>
         
         <plugin.bukkitMain>com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot</plugin.bukkitMain>
         <plugin.bungeeMain>com.github.sirblobman.join.commands.bungee.JoinCommandsBungee</plugin.bungeeMain>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>20.1.0</version>
+            <version>21.0.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -84,14 +84,19 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.10.9</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- SirBlobman Commands -->
-        <!-- Included in project -->
+        <!-- SirBlobman Configuration -->
         <dependency>
             <groupId>com.github.sirblobman.api</groupId>
-            <artifactId>command</artifactId>
-            <version>2.1-SNAPSHOT</version>
+            <artifactId>configuration</artifactId>
+            <version>2.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
