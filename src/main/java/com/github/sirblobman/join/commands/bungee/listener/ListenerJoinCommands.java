@@ -105,12 +105,12 @@ public class ListenerJoinCommands implements Listener {
     
     private void runProxyJoinCommands(ProxiedPlayer player) {
         CommandManager commandManager = this.plugin.getCommandManager();
-        List<ProxyJoinCommand> proxyJoinCommandList = commandManager.getProxyJoinCommandList();
+        List<ProxyJoinCommand> commandList = commandManager.getProxyJoinCommandList();
         
         ProxyServer proxy = this.plugin.getProxy();
         TaskScheduler scheduler = proxy.getScheduler();
         
-        for(ProxyJoinCommand command : proxyJoinCommandList) {
+        for(ProxyJoinCommand command : commandList) {
             if(!command.shouldBeExecutedFor(this.plugin, player)) {
                 continue;
             }

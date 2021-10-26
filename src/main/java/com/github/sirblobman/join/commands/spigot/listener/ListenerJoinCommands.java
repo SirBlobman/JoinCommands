@@ -81,10 +81,13 @@ public class ListenerJoinCommands implements Listener {
         
         BukkitScheduler scheduler = Bukkit.getScheduler();
         CommandManager commandManager = this.plugin.getCommandManager();
-        List<ServerJoinCommand> joinCommandList = commandManager.getJoinCommandList();
-        joinCommandList.removeIf(command -> !command.shouldBeExecutedFor(this.plugin, player));
-        
-        for(ServerJoinCommand command : joinCommandList) {
+        List<ServerJoinCommand> commandList = commandManager.getJoinCommandList();
+    
+        for(ServerJoinCommand command : commandList) {
+            if(!command.shouldBeExecutedFor(this.plugin, player)) {
+                continue;
+            }
+            
             long delay = command.getDelay();
             Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
@@ -98,10 +101,13 @@ public class ListenerJoinCommands implements Listener {
         
         BukkitScheduler scheduler = Bukkit.getScheduler();
         CommandManager commandManager = this.plugin.getCommandManager();
-        List<WorldJoinCommand> joinCommandList = commandManager.getWorldJoinCommandList();
-        joinCommandList.removeIf(command -> !command.shouldBeExecutedFor(this.plugin, player, world));
+        List<WorldJoinCommand> commandList = commandManager.getWorldJoinCommandList();
         
-        for(WorldJoinCommand command : joinCommandList) {
+        for(WorldJoinCommand command : commandList) {
+            if(!command.shouldBeExecutedFor(this.plugin, player, world)) {
+                continue;
+            }
+    
             long delay = command.getDelay();
             Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
