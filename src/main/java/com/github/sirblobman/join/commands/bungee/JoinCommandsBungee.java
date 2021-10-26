@@ -44,7 +44,9 @@ public final class JoinCommandsBungee extends Plugin {
     }
     
     public Configuration getConfig() {
-        if(this.config == null) loadConfig();
+        if(this.config == null) {
+            loadConfig();
+        }
         
         return this.config;
     }
@@ -54,7 +56,9 @@ public final class JoinCommandsBungee extends Plugin {
             File pluginFolder = getDataFolder();
             if(!pluginFolder.exists()) {
                 boolean makeFolder = pluginFolder.mkdirs();
-                if(!makeFolder) throw new IOException("Failed to create plugin folder for JoinCommands.");
+                if(!makeFolder) {
+                    throw new IOException("Failed to create plugin folder for JoinCommands.");
+                }
             }
             
             ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
@@ -81,13 +85,21 @@ public final class JoinCommandsBungee extends Plugin {
     }
     
     private void loadConfig() {
-        File pluginFolder = getDataFolder();
-        if(!pluginFolder.exists()) pluginFolder.mkdirs();
-        
-        File file = new File(pluginFolder, "config.yml");
-        if(!file.exists()) saveDefaultConfig();
         
         try {
+            File pluginFolder = getDataFolder();
+            if(!pluginFolder.exists()) {
+                boolean makeFolder = pluginFolder.mkdirs();
+                if(!makeFolder) {
+                    throw new IOException("Failed to create plugin folder.");
+                }
+            }
+            
+            File file = new File(pluginFolder, "config.yml");
+            if(!file.exists()) {
+                saveDefaultConfig();
+            }
+            
             ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
             this.config = provider.load(file);
         } catch(IOException ex) {
@@ -98,13 +110,24 @@ public final class JoinCommandsBungee extends Plugin {
     }
     
     private void saveDefaultConfig() {
-        File pluginFolder = getDataFolder();
-        if(!pluginFolder.exists()) pluginFolder.mkdirs();
-        
-        File file = new File(pluginFolder, "config.yml");
-        Path path = file.toPath();
-        
         try {
+            File pluginFolder = getDataFolder();
+            if(!pluginFolder.exists()) {
+                boolean makeFolder = pluginFolder.mkdirs();
+                if(!makeFolder) {
+                    throw new IOException("Failed to create plugin folder.");
+                }
+            }
+    
+            File file = new File(pluginFolder, "config.yml");
+            if(!file.exists()) {
+                boolean createFile = file.createNewFile();
+                if(!createFile) {
+                    throw new IOException("Create file returned false.");
+                }
+            }
+            
+            Path path = file.toPath();
             InputStream configStream = getResourceAsStream("config.yml");
             Files.copy(configStream, path, StandardCopyOption.REPLACE_EXISTING);
         } catch(IOException ex) {

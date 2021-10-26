@@ -36,7 +36,9 @@ public class ListenerJoinCommands implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMessage(PluginMessageEvent e) {
         Connection connection = e.getReceiver();
-        if(!(connection instanceof ProxiedPlayer)) return;
+        if(!(connection instanceof ProxiedPlayer)) {
+            return;
+        }
         
         ProxiedPlayer player = (ProxiedPlayer) connection;
         String channel = e.getTag();
@@ -62,7 +64,9 @@ public class ListenerJoinCommands implements Listener {
     }
     
     private void runPlayerCommand(ProxiedPlayer player, byte[] data) {
-        if(player == null || data == null) return;
+        if(player == null || data == null) {
+            return;
+        }
         
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
@@ -79,7 +83,9 @@ public class ListenerJoinCommands implements Listener {
     }
     
     private void runConsoleCommand(byte[] data) {
-        if(data == null) return;
+        if(data == null) {
+            return;
+        }
         
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
@@ -105,7 +111,9 @@ public class ListenerJoinCommands implements Listener {
         TaskScheduler scheduler = proxy.getScheduler();
         
         for(ProxyJoinCommand command : proxyJoinCommandList) {
-            if(!command.shouldBeExecutedFor(this.plugin, player)) continue;
+            if(!command.shouldBeExecutedFor(this.plugin, player)) {
+                continue;
+            }
             
             long delay = command.getDelay();
             Runnable task = () -> command.executeFor(this.plugin, player);
