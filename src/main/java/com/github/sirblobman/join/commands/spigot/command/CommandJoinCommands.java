@@ -12,22 +12,23 @@ import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
 
 public final class CommandJoinCommands implements TabExecutor {
     private final JoinCommandsSpigot plugin;
+    
     public CommandJoinCommands(JoinCommandsSpigot plugin) {
         this.plugin = plugin;
     }
-
+    
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1 ? Collections.singletonList("reload") : Collections.emptyList());
     }
-
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length < 1) return false;
-
+        
         String sub = args[0].toLowerCase();
         if(!sub.equals("reload")) return false;
-
+        
         this.plugin.reloadConfig();
         sender.sendMessage(ChatColor.GREEN + "Successfully reloaded the JoinCommands configuration.");
         return true;

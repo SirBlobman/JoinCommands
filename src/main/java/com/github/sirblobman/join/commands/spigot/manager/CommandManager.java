@@ -17,6 +17,7 @@ public class CommandManager {
     private final JoinCommandsSpigot plugin;
     private final List<ServerJoinCommand> serverJoinCommandList = new ArrayList<>();
     private final List<WorldJoinCommand> worldJoinCommandList = new ArrayList<>();
+    
     public CommandManager(JoinCommandsSpigot plugin) {
         this.plugin = plugin;
     }
@@ -27,7 +28,7 @@ public class CommandManager {
         Logger logger = this.plugin.getLogger();
         FileConfiguration config = this.plugin.getConfig();
         if(config == null) return;
-    
+        
         ConfigurationSection section = config.getConfigurationSection("server-join-commands");
         if(section == null) {
             logger.warning("Your config seems to be missing the 'server-join-commands' section.");
@@ -35,11 +36,11 @@ public class CommandManager {
             logger.warning("If you manually deleted it then please ignore this message.");
             return;
         }
-    
+        
         Set<String> commandIdSet = section.getKeys(false);
         for(String commandId : commandIdSet) {
             if(commandId == null || commandId.isEmpty()) continue;
-    
+            
             ConfigurationSection commandSection = section.getConfigurationSection(commandId);
             if(commandSection == null) continue;
             
@@ -74,11 +75,11 @@ public class CommandManager {
     
     public void loadWorldJoinCommands() {
         this.worldJoinCommandList.clear();
-    
+        
         Logger logger = this.plugin.getLogger();
         FileConfiguration config = this.plugin.getConfig();
         if(config == null) return;
-    
+        
         ConfigurationSection section = config.getConfigurationSection("world-join-commands");
         if(section == null) {
             logger.warning("Your config seems to be missing the 'world-join-commands' section.");
@@ -86,14 +87,14 @@ public class CommandManager {
             logger.warning("If you manually deleted it then please ignore this message.");
             return;
         }
-    
+        
         Set<String> commandIdSet = section.getKeys(false);
         for(String commandId : commandIdSet) {
             if(commandId == null || commandId.isEmpty()) continue;
-        
+            
             ConfigurationSection commandSection = section.getConfigurationSection(commandId);
             if(commandSection == null) continue;
-        
+            
             WorldJoinCommand worldJoinCommand = loadWorldJoinCommand(commandSection);
             if(worldJoinCommand == null) continue;
             

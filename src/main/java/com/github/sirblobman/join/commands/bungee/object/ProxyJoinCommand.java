@@ -17,6 +17,7 @@ public class ProxyJoinCommand {
     private final String permission;
     private final boolean firstJoinOnly;
     private final long delay;
+    
     public ProxyJoinCommand(List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
         this.commandList = Objects.requireNonNull(commandList, "commandList must not be null!");
         if(this.commandList.isEmpty()) throw new IllegalArgumentException("commandList must no be empty!");
@@ -76,7 +77,7 @@ public class ProxyJoinCommand {
     
     private void runAsConsole(JoinCommandsBungee plugin, String command) {
         if(plugin == null || command == null || command.isEmpty()) return;
-    
+        
         ProxyServer proxy = plugin.getProxy();
         CommandSender console = proxy.getConsole();
         

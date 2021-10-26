@@ -14,6 +14,7 @@ import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
 public class CommandManager {
     private final JoinCommandsBungee plugin;
     private final List<ProxyJoinCommand> proxyJoinCommandList = new ArrayList<>();
+    
     public CommandManager(JoinCommandsBungee plugin) {
         this.plugin = plugin;
     }
@@ -24,10 +25,10 @@ public class CommandManager {
         Logger logger = this.plugin.getLogger();
         Configuration config = this.plugin.getConfig();
         if(config == null) return;
-    
+        
         Configuration section = config.getSection("proxy-join-commands");
         if(section == null) return;
-    
+        
         Collection<String> commandIdList = section.getKeys();
         for(String commandId : commandIdList) {
             if(commandId == null || commandId.isEmpty()) continue;
@@ -48,12 +49,12 @@ public class CommandManager {
     
     private ProxyJoinCommand loadProxyJoinCommand(String commandId, Configuration section) {
         if(section == null) return null;
-    
+        
         List<String> commandList = section.getStringList("command-list");
         String permission = section.getString("permission");
         boolean firstJoinOnly = section.getBoolean("first-join-only");
         long delay = section.getLong("delay");
-    
+        
         try {
             return new ProxyJoinCommand(commandList, permission, firstJoinOnly, delay);
         } catch(Exception ex) {

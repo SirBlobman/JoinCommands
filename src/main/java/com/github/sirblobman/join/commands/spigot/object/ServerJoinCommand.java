@@ -26,6 +26,7 @@ public class ServerJoinCommand {
     private final String permission;
     private final boolean firstJoinOnly;
     private final long delay;
+    
     public ServerJoinCommand(List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
         Validate.notEmpty(commandList, "commandList must not be empty or null.");
         
@@ -64,7 +65,7 @@ public class ServerJoinCommand {
         
         for(String command : this.commandList) {
             command = command.replace("{player}", playerName);
-
+            
             if(plugin.usePlaceholderAPIHook()) {
                 command = PlaceholderAPI.setPlaceholders(player, command);
             }
@@ -72,24 +73,16 @@ public class ServerJoinCommand {
             if(command.toLowerCase().startsWith("[player]")) {
                 command = command.substring("[player]".length());
                 runAsPlayer(player, command);
-            }
-            
-            else if(command.toLowerCase().startsWith("[op]")) {
+            } else if(command.toLowerCase().startsWith("[op]")) {
                 command = command.substring("[op]".length());
                 runAsOp(player, command);
-            }
-            
-            else if(command.toLowerCase().startsWith("[bplayer]")) {
+            } else if(command.toLowerCase().startsWith("[bplayer]")) {
                 command = command.substring("[bplayer]".length());
                 runAsBungeePlayer(plugin, player, command);
-            }
-            
-            else if(command.toLowerCase().startsWith("[bconsole]")) {
+            } else if(command.toLowerCase().startsWith("[bconsole]")) {
                 command = command.substring("[bconsole]".length());
                 runAsBungeeConsole(plugin, player, command);
-            }
-
-            else {
+            } else {
                 runAsConsole(command);
             }
         }
@@ -126,7 +119,7 @@ public class ServerJoinCommand {
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         Bukkit.dispatchCommand(console, command);
     }
-
+    
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeePlayer(JoinCommandsSpigot plugin, Player player, String command) {
         if(plugin == null || player == null || command == null || command.isEmpty()) return;
@@ -142,7 +135,7 @@ public class ServerJoinCommand {
             logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:player'. Is the BungeeCord proxy online?", ex);
         }
     }
-
+    
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeeConsole(JoinCommandsSpigot plugin, Player player, String command) {
         if(plugin == null || player == null || command == null || command.isEmpty()) return;

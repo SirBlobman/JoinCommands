@@ -28,11 +28,12 @@ import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
 
 public class ListenerJoinCommands implements Listener {
     private final JoinCommandsBungee plugin;
+    
     public ListenerJoinCommands(JoinCommandsBungee plugin) {
         this.plugin = plugin;
     }
     
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onMessage(PluginMessageEvent e) {
         Connection connection = e.getReceiver();
         if(!(connection instanceof ProxiedPlayer)) return;
@@ -40,7 +41,7 @@ public class ListenerJoinCommands implements Listener {
         ProxiedPlayer player = (ProxiedPlayer) connection;
         String channel = e.getTag();
         byte[] data = e.getData();
-    
+        
         if(channel.equals("jc:player")) {
             e.setCancelled(true);
             runPlayerCommand(player, data);
@@ -53,7 +54,7 @@ public class ListenerJoinCommands implements Listener {
         }
     }
     
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PostLoginEvent e) {
         ProxiedPlayer player = e.getPlayer();
         runProxyJoinCommands(player);
@@ -62,12 +63,12 @@ public class ListenerJoinCommands implements Listener {
     
     private void runPlayerCommand(ProxiedPlayer player, byte[] data) {
         if(player == null || data == null) return;
-    
+        
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             DataInputStream dataStream = new DataInputStream(inputStream);
             String command = dataStream.readUTF();
-    
+            
             ProxyServer proxy = this.plugin.getProxy();
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(player, command);
@@ -79,12 +80,12 @@ public class ListenerJoinCommands implements Listener {
     
     private void runConsoleCommand(byte[] data) {
         if(data == null) return;
-    
+        
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             DataInputStream dataStream = new DataInputStream(inputStream);
             String command = dataStream.readUTF();
-        
+            
             ProxyServer proxy = this.plugin.getProxy();
             CommandSender console = proxy.getConsole();
             
@@ -105,7 +106,7 @@ public class ListenerJoinCommands implements Listener {
         
         for(ProxyJoinCommand command : proxyJoinCommandList) {
             if(!command.shouldBeExecutedFor(this.plugin, player)) continue;
-
+            
             long delay = command.getDelay();
             Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.schedule(plugin, task, delay, TimeUnit.SECONDS);

@@ -20,8 +20,13 @@ import net.md_5.bungee.config.YamlConfiguration;
 import com.github.sirblobman.join.commands.bungee.listener.ListenerJoinCommands;
 import com.github.sirblobman.join.commands.bungee.manager.CommandManager;
 
-public class JoinCommandsBungee extends Plugin {
-    private final CommandManager commandManager = new CommandManager(this);
+public final class JoinCommandsBungee extends Plugin {
+    private final CommandManager commandManager;
+    private Configuration config;
+    
+    public JoinCommandsBungee() {
+        this.commandManager = new CommandManager(this);
+    }
     
     @Override
     public void onEnable() {
@@ -38,7 +43,6 @@ public class JoinCommandsBungee extends Plugin {
         return this.commandManager;
     }
     
-    private Configuration config;
     public Configuration getConfig() {
         if(this.config == null) loadConfig();
         
@@ -52,7 +56,7 @@ public class JoinCommandsBungee extends Plugin {
                 boolean makeFolder = pluginFolder.mkdirs();
                 if(!makeFolder) throw new IOException("Failed to create plugin folder for JoinCommands.");
             }
-
+            
             ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
             File file = new File(pluginFolder, "config.yml");
             provider.save(this.config, file);
