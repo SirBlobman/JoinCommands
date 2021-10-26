@@ -118,7 +118,7 @@ public final class JoinCommandsBungee extends Plugin {
                     throw new IOException("Failed to create plugin folder.");
                 }
             }
-    
+            
             File file = new File(pluginFolder, "config.yml");
             if(!file.exists()) {
                 boolean createFile = file.createNewFile();

@@ -75,9 +75,11 @@ public class ListenerJoinCommands implements Listener {
     }
     
     private void runServerJoinComands(Player player) {
-        if(player == null) return;
-        BukkitScheduler scheduler = Bukkit.getScheduler();
+        if(player == null) {
+            return;
+        }
         
+        BukkitScheduler scheduler = Bukkit.getScheduler();
         CommandManager commandManager = this.plugin.getCommandManager();
         List<ServerJoinCommand> joinCommandList = commandManager.getJoinCommandList();
         joinCommandList.removeIf(command -> !command.shouldBeExecutedFor(this.plugin, player));
@@ -90,9 +92,11 @@ public class ListenerJoinCommands implements Listener {
     }
     
     private void runWorldJoinCommands(Player player, World world) {
-        if(player == null || world == null) return;
-        BukkitScheduler scheduler = Bukkit.getScheduler();
+        if(player == null || world == null) {
+            return;
+        }
         
+        BukkitScheduler scheduler = Bukkit.getScheduler();
         CommandManager commandManager = this.plugin.getCommandManager();
         List<WorldJoinCommand> joinCommandList = commandManager.getWorldJoinCommandList();
         joinCommandList.removeIf(command -> !command.shouldBeExecutedFor(this.plugin, player, world));
@@ -105,34 +109,44 @@ public class ListenerJoinCommands implements Listener {
     }
     
     private void setJoinedServerBefore(Player player) {
-        if(player == null) return;
+        if(player == null) {
+            return;
+        }
         
         PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
         YamlConfiguration config = playerDataManager.get(player);
-        if(config.getBoolean("join-commands.played-before")) return;
+        if(config.getBoolean("join-commands.played-before")) {
+            return;
+        }
         
         config.set("join-commands.played-before", true);
         playerDataManager.save(player);
     }
     
     private void setJoinedWorldBefore(Player player, World world) {
-        if(player == null || world == null) return;
-        String worldName = world.getName();
+        if(player == null || world == null) {
+            return;
+        }
         
+        String worldName = world.getName();
         PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
         YamlConfiguration config = playerDataManager.get(player);
         
         List<String> worldList = config.getStringList("join-commands.played-before-world-list");
-        if(worldList.contains(worldName)) return;
-        worldList.add(worldName);
+        if(worldList.contains(worldName)) {
+            return;
+        }
         
+        worldList.add(worldName);
         config.set("join-commands.played-before-world-list", worldList);
         playerDataManager.save(player);
     }
     
     private void sendDebug(String... messageArray) {
         FileConfiguration configuration = this.plugin.getConfig();
-        if(!configuration.getBoolean("debug-mode", false)) return;
+        if(!configuration.getBoolean("debug-mode", false)) {
+            return;
+        }
         
         Logger logger = this.plugin.getLogger();
         for(String message : messageArray) {

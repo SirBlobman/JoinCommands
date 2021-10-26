@@ -41,14 +41,18 @@ public class ServerJoinCommand {
     }
     
     public boolean shouldBeExecutedFor(JoinCommandsSpigot plugin, Player player) {
-        if(plugin == null || player == null) return false;
+        if(plugin == null || player == null) {
+            return false;
+        }
         
         if(this.firstJoinOnly) {
             PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
             YamlConfiguration configuration = playerDataManager.get(player);
             
             boolean hasJoinedBefore = configuration.getBoolean("join-commands.played-before", false);
-            if(hasJoinedBefore) return false;
+            if(hasJoinedBefore) {
+                return false;
+            }
         }
         
         if(this.permission != null && !this.permission.isEmpty()) {
@@ -60,9 +64,11 @@ public class ServerJoinCommand {
     }
     
     public void executeFor(JoinCommandsSpigot plugin, Player player) {
-        if(plugin == null || player == null) return;
-        String playerName = player.getName();
+        if(plugin == null || player == null) {
+            return;
+        }
         
+        String playerName = player.getName();
         for(String command : this.commandList) {
             command = command.replace("{player}", playerName);
             
@@ -89,19 +95,25 @@ public class ServerJoinCommand {
     }
     
     private void runAsPlayer(Player player, String command) {
-        if(player == null || command == null || command.isEmpty()) return;
-        PluginManager manager = Bukkit.getPluginManager();
+        if(player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
+        PluginManager manager = Bukkit.getPluginManager();
         PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, "/" + command);
         manager.callEvent(event);
-        if(event.isCancelled()) return;
+        if(event.isCancelled()) {
+            return;
+        }
         
         String actualCommand = event.getMessage().substring(1);
         player.performCommand(actualCommand);
     }
     
     private void runAsOp(Player player, String command) {
-        if(player == null || command == null || command.isEmpty()) return;
+        if(player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
         if(player.isOp()) {
             runAsPlayer(player, command);
@@ -114,7 +126,9 @@ public class ServerJoinCommand {
     }
     
     private void runAsConsole(String command) {
-        if(command == null || command.isEmpty()) return;
+        if(command == null || command.isEmpty()) {
+            return;
+        }
         
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         Bukkit.dispatchCommand(console, command);
@@ -122,7 +136,9 @@ public class ServerJoinCommand {
     
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeePlayer(JoinCommandsSpigot plugin, Player player, String command) {
-        if(plugin == null || player == null || command == null || command.isEmpty()) return;
+        if(plugin == null || player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
@@ -138,7 +154,9 @@ public class ServerJoinCommand {
     
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeeConsole(JoinCommandsSpigot plugin, Player player, String command) {
-        if(plugin == null || player == null || command == null || command.isEmpty()) return;
+        if(plugin == null || player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();

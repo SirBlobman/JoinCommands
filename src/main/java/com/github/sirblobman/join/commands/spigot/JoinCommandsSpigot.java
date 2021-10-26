@@ -62,7 +62,9 @@ public class JoinCommandsSpigot extends JavaPlugin {
     
     private void registerBungeeCordChannels() {
         FileConfiguration config = getConfig();
-        if(!config.getBoolean("spigot-options.bungeecord-hook")) return;
+        if(!config.getBoolean("spigot-options.bungeecord-hook")) {
+            return;
+        }
         
         Messenger messenger = Bukkit.getMessenger();
         messenger.registerOutgoingPluginChannel(this, "jc:console");

@@ -1,6 +1,7 @@
 package com.github.sirblobman.join.commands.spigot.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -27,7 +28,9 @@ public class CommandManager {
         
         Logger logger = this.plugin.getLogger();
         FileConfiguration config = this.plugin.getConfig();
-        if(config == null) return;
+        if(config == null) {
+            return;
+        }
         
         ConfigurationSection section = config.getConfigurationSection("server-join-commands");
         if(section == null) {
@@ -39,22 +42,30 @@ public class CommandManager {
         
         Set<String> commandIdSet = section.getKeys(false);
         for(String commandId : commandIdSet) {
-            if(commandId == null || commandId.isEmpty()) continue;
+            if(commandId == null || commandId.isEmpty()) {
+                continue;
+            }
             
             ConfigurationSection commandSection = section.getConfigurationSection(commandId);
-            if(commandSection == null) continue;
+            if(commandSection == null) {
+                continue;
+            }
             
             ServerJoinCommand serverJoinCommand = loadServerJoinCommand(commandSection);
-            if(serverJoinCommand == null) continue;
+            if(serverJoinCommand == null) {
+                continue;
+            }
             
             this.serverJoinCommandList.add(serverJoinCommand);
         }
     }
     
     private ServerJoinCommand loadServerJoinCommand(ConfigurationSection section) {
-        if(section == null) return null;
-        String commandId = section.getName();
+        if(section == null) {
+            return null;
+        }
         
+        String commandId = section.getName();
         List<String> commandList = section.getStringList("command-list");
         String permission = section.getString("permission");
         boolean firstJoinOnly = section.getBoolean("first-join-only");
@@ -64,13 +75,14 @@ public class CommandManager {
             return new ServerJoinCommand(commandList, permission, firstJoinOnly, delay);
         } catch(Exception ex) {
             Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while loading the server join command with id '" + commandId + "':", ex);
+            logger.log(Level.WARNING, "An error occurred while loading the server join command with id '"
+                    + commandId + "':", ex);
             return null;
         }
     }
     
     public List<ServerJoinCommand> getJoinCommandList() {
-        return new ArrayList<>(this.serverJoinCommandList);
+        return Collections.unmodifiableList(this.serverJoinCommandList);
     }
     
     public void loadWorldJoinCommands() {
@@ -78,7 +90,9 @@ public class CommandManager {
         
         Logger logger = this.plugin.getLogger();
         FileConfiguration config = this.plugin.getConfig();
-        if(config == null) return;
+        if(config == null) {
+            return;
+        }
         
         ConfigurationSection section = config.getConfigurationSection("world-join-commands");
         if(section == null) {
@@ -90,22 +104,30 @@ public class CommandManager {
         
         Set<String> commandIdSet = section.getKeys(false);
         for(String commandId : commandIdSet) {
-            if(commandId == null || commandId.isEmpty()) continue;
+            if(commandId == null || commandId.isEmpty()) {
+                continue;
+            }
             
             ConfigurationSection commandSection = section.getConfigurationSection(commandId);
-            if(commandSection == null) continue;
+            if(commandSection == null) {
+                continue;
+            }
             
             WorldJoinCommand worldJoinCommand = loadWorldJoinCommand(commandSection);
-            if(worldJoinCommand == null) continue;
+            if(worldJoinCommand == null) {
+                continue;
+            }
             
             this.worldJoinCommandList.add(worldJoinCommand);
         }
     }
     
     private WorldJoinCommand loadWorldJoinCommand(ConfigurationSection section) {
-        if(section == null) return null;
-        String commandId = section.getName();
+        if(section == null) {
+            return null;
+        }
         
+        String commandId = section.getName();
         List<String> commandList = section.getStringList("command-list");
         List<String> worldList = section.getStringList("world-list");
         String permission = section.getString("permission");
@@ -116,12 +138,13 @@ public class CommandManager {
             return new WorldJoinCommand(worldList, commandList, permission, firstJoinOnly, delay);
         } catch(Exception ex) {
             Logger logger = this.plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while loading the world join command with id '" + commandId + "':", ex);
+            logger.log(Level.WARNING, "An error occurred while loading the world join command with id '"
+                    + commandId + "':", ex);
             return null;
         }
     }
     
     public List<WorldJoinCommand> getWorldJoinCommandList() {
-        return new ArrayList<>(this.worldJoinCommandList);
+        return Collections.unmodifiableList(this.worldJoinCommandList);
     }
 }

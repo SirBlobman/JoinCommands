@@ -23,7 +23,7 @@
         <plugin.name>JoinCommands</plugin.name>
         <plugin.prefix>${project.name}</plugin.prefix>
         <plugin.description>${project.description}</plugin.description>
-        <plugin.version>2.0.4</plugin.version>
+        <plugin.version>2.0.5</plugin.version>
 
         <plugin.bukkitMain>com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot</plugin.bukkitMain>
         <plugin.bungeeMain>com.github.sirblobman.join.commands.bungee.JoinCommandsBungee</plugin.bungeeMain>

@@ -28,7 +28,8 @@ public class WorldJoinCommand {
     private final boolean firstJoinOnly;
     private final long delay;
     
-    public WorldJoinCommand(List<String> worldNameList, List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
+    public WorldJoinCommand(List<String> worldNameList, List<String> commandList, String permission,
+                            boolean firstJoinOnly, long delay) {
         Validate.notNull(worldNameList, "worldNameList must not be null.");
         Validate.notEmpty(commandList, "commandList must not be empty or null.");
         
@@ -44,20 +45,26 @@ public class WorldJoinCommand {
     }
     
     public boolean shouldBeExecutedFor(JoinCommandsSpigot plugin, Player player, World world) {
-        if(plugin == null || player == null || world == null || this.worldNameList.isEmpty()) return false;
-        String worldName = world.getName();
+        if(plugin == null || player == null || world == null || this.worldNameList.isEmpty()) {
+            return false;
+        }
         
+        String worldName = world.getName();
         if(this.firstJoinOnly) {
             PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
             YamlConfiguration configuration = playerDataManager.get(player);
             
             List<String> joinedWorldNameList = configuration.getStringList("join-commands.played-before-world-list");
-            if(joinedWorldNameList.contains(worldName)) return false;
+            if(joinedWorldNameList.contains(worldName)) {
+                return false;
+            }
         }
         
         if(this.permission != null && !this.permission.isEmpty()) {
             Permission permission = new Permission(this.permission, "A permission that allows a specific world join command to be executed.", PermissionDefault.FALSE);
-            if(!player.hasPermission(permission)) return false;
+            if(!player.hasPermission(permission)) {
+                return false;
+            }
         }
         
         return (this.worldNameList.contains("*") || this.worldNameList.contains(worldName));
@@ -93,19 +100,25 @@ public class WorldJoinCommand {
     }
     
     private void runAsPlayer(Player player, String command) {
-        if(player == null || command == null || command.isEmpty()) return;
-        PluginManager manager = Bukkit.getPluginManager();
+        if(player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
+        PluginManager manager = Bukkit.getPluginManager();
         PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, "/" + command);
         manager.callEvent(event);
-        if(event.isCancelled()) return;
+        if(event.isCancelled()) {
+            return;
+        }
         
         String actualCommand = event.getMessage().substring(1);
         player.performCommand(actualCommand);
     }
     
     private void runAsOp(Player player, String command) {
-        if(player == null || command == null || command.isEmpty()) return;
+        if(player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
         if(player.isOp()) {
             runAsPlayer(player, command);
@@ -118,7 +131,9 @@ public class WorldJoinCommand {
     }
     
     private void runAsConsole(String command) {
-        if(command == null || command.isEmpty()) return;
+        if(command == null || command.isEmpty()) {
+            return;
+        }
         
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         Bukkit.dispatchCommand(console, command);
@@ -126,7 +141,9 @@ public class WorldJoinCommand {
     
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeePlayer(JoinCommandsSpigot plugin, Player player, String command) {
-        if(plugin == null || player == null || command == null || command.isEmpty()) return;
+        if(plugin == null || player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
@@ -142,7 +159,9 @@ public class WorldJoinCommand {
     
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeeConsole(JoinCommandsSpigot plugin, Player player, String command) {
-        if(plugin == null || player == null || command == null || command.isEmpty()) return;
+        if(plugin == null || player == null || command == null || command.isEmpty()) {
+            return;
+        }
         
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
