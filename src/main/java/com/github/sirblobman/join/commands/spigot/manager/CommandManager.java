@@ -18,134 +18,134 @@ public final class CommandManager {
     private final JoinCommandsSpigot plugin;
     private final List<ServerJoinCommand> serverJoinCommandList;
     private final List<WorldJoinCommand> worldJoinCommandList;
-    
+
     public CommandManager(JoinCommandsSpigot plugin) {
         this.plugin = plugin;
         this.serverJoinCommandList = new ArrayList<>();
         this.worldJoinCommandList = new ArrayList<>();
     }
-    
+
     public void loadServerJoinCommands() {
         this.serverJoinCommandList.clear();
-        
+
         Logger logger = this.plugin.getLogger();
         FileConfiguration config = this.plugin.getConfig();
-        if(config == null) {
+        if (config == null) {
             return;
         }
-        
+
         ConfigurationSection section = config.getConfigurationSection("server-join-commands");
-        if(section == null) {
+        if (section == null) {
             logger.warning("Your config seems to be missing the 'server-join-commands' section.");
             logger.warning("This means that commands will not be executed when a player joins the server.");
             logger.warning("If you manually deleted it then please ignore this message.");
             return;
         }
-        
+
         Set<String> commandIdSet = section.getKeys(false);
-        for(String commandId : commandIdSet) {
-            if(commandId == null || commandId.isEmpty()) {
+        for (String commandId : commandIdSet) {
+            if (commandId == null || commandId.isEmpty()) {
                 continue;
             }
-            
+
             ConfigurationSection commandSection = section.getConfigurationSection(commandId);
-            if(commandSection == null) {
+            if (commandSection == null) {
                 continue;
             }
-            
+
             ServerJoinCommand serverJoinCommand = loadServerJoinCommand(commandSection);
-            if(serverJoinCommand == null) {
+            if (serverJoinCommand == null) {
                 continue;
             }
-            
+
             this.serverJoinCommandList.add(serverJoinCommand);
         }
     }
-    
+
     private ServerJoinCommand loadServerJoinCommand(ConfigurationSection section) {
-        if(section == null) {
+        if (section == null) {
             return null;
         }
-        
+
         String commandId = section.getName();
         List<String> commandList = section.getStringList("command-list");
         String permission = section.getString("permission");
         boolean firstJoinOnly = section.getBoolean("first-join-only");
         long delay = section.getLong("delay");
-        
+
         try {
             return new ServerJoinCommand(commandList, permission, firstJoinOnly, delay);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while loading the server join command with id '"
                     + commandId + "':", ex);
             return null;
         }
     }
-    
+
     public List<ServerJoinCommand> getJoinCommandList() {
         return Collections.unmodifiableList(this.serverJoinCommandList);
     }
-    
+
     public void loadWorldJoinCommands() {
         this.worldJoinCommandList.clear();
-        
+
         Logger logger = this.plugin.getLogger();
         FileConfiguration config = this.plugin.getConfig();
-        if(config == null) {
+        if (config == null) {
             return;
         }
-        
+
         ConfigurationSection section = config.getConfigurationSection("world-join-commands");
-        if(section == null) {
+        if (section == null) {
             logger.warning("Your config seems to be missing the 'world-join-commands' section.");
             logger.warning("This means that commands will not be executed when a player joins a world.");
             logger.warning("If you manually deleted it then please ignore this message.");
             return;
         }
-        
+
         Set<String> commandIdSet = section.getKeys(false);
-        for(String commandId : commandIdSet) {
-            if(commandId == null || commandId.isEmpty()) {
+        for (String commandId : commandIdSet) {
+            if (commandId == null || commandId.isEmpty()) {
                 continue;
             }
-            
+
             ConfigurationSection commandSection = section.getConfigurationSection(commandId);
-            if(commandSection == null) {
+            if (commandSection == null) {
                 continue;
             }
-            
+
             WorldJoinCommand worldJoinCommand = loadWorldJoinCommand(commandSection);
-            if(worldJoinCommand == null) {
+            if (worldJoinCommand == null) {
                 continue;
             }
-            
+
             this.worldJoinCommandList.add(worldJoinCommand);
         }
     }
-    
+
     private WorldJoinCommand loadWorldJoinCommand(ConfigurationSection section) {
-        if(section == null) {
+        if (section == null) {
             return null;
         }
-        
+
         String commandId = section.getName();
         List<String> commandList = section.getStringList("command-list");
         List<String> worldList = section.getStringList("world-list");
         String permission = section.getString("permission");
         boolean firstJoinOnly = section.getBoolean("first-join-only");
         long delay = section.getLong("delay");
-        
+
         try {
             return new WorldJoinCommand(worldList, commandList, permission, firstJoinOnly, delay);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while loading the world join command with id '"
                     + commandId + "':", ex);
             return null;
         }
     }
-    
+
     public List<WorldJoinCommand> getWorldJoinCommandList() {
         return Collections.unmodifiableList(this.worldJoinCommandList);
     }

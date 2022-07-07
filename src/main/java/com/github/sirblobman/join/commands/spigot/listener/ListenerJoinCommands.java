@@ -24,38 +24,38 @@ import com.github.sirblobman.join.commands.spigot.object.WorldJoinCommand;
 
 public final class ListenerJoinCommands implements Listener {
     private final JoinCommandsSpigot plugin;
-    
+
     public ListenerJoinCommands(JoinCommandsSpigot plugin) {
         this.plugin = plugin;
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         sendDebug("", "Detected PlayerJoinEvent...");
-        
+
         Player player = e.getPlayer();
         sendDebug("Player Name: " + player.getName());
-        
+
         sendDebug("Running server join commands for player...");
         runServerJoinComands(player);
         sendDebug("Finished running server join commands.");
-        
+
         sendDebug("Setting player as previously joined if not already set.");
         setJoinedServerBefore(player);
-        
+
         World world = player.getWorld();
         sendDebug("Detected world join for world " + world.getName());
-        
+
         sendDebug("Running world join commands for player...");
         runWorldJoinCommands(player, world);
         sendDebug("Finished running world join commands.");
-        
+
         setJoinedWorldBefore(player, world);
         sendDebug("Setting player as previously joined world if not already set.");
-        
+
         sendDebug("Finished PlayerJoinEvent checks.");
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChangeWorld(PlayerChangedWorldEvent e) {
         sendDebug("", "Detected PlayerChangedWorldEvent...");
@@ -63,99 +63,99 @@ public final class ListenerJoinCommands implements Listener {
         sendDebug("Player Name: " + player.getName());
         World world = player.getWorld();
         sendDebug("World Name: " + world.getName());
-        
+
         sendDebug("Running world join commands for player...");
         runWorldJoinCommands(player, world);
         sendDebug("Finished running world join commands.");
-        
+
         setJoinedWorldBefore(player, world);
         sendDebug("Setting player as previously joined world if not already set.");
-        
+
         sendDebug("Finished PlayerChangedWorldEvent checks.");
     }
-    
+
     private void runServerJoinComands(Player player) {
-        if(player == null) {
+        if (player == null) {
             return;
         }
-        
+
         BukkitScheduler scheduler = Bukkit.getScheduler();
         CommandManager commandManager = this.plugin.getCommandManager();
         List<ServerJoinCommand> commandList = commandManager.getJoinCommandList();
-    
-        for(ServerJoinCommand command : commandList) {
-            if(!command.shouldBeExecutedFor(this.plugin, player)) {
+
+        for (ServerJoinCommand command : commandList) {
+            if (!command.shouldBeExecutedFor(this.plugin, player)) {
                 continue;
             }
-            
+
             long delay = command.getDelay();
             Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
-    
+
     private void runWorldJoinCommands(Player player, World world) {
-        if(player == null || world == null) {
+        if (player == null || world == null) {
             return;
         }
-        
+
         BukkitScheduler scheduler = Bukkit.getScheduler();
         CommandManager commandManager = this.plugin.getCommandManager();
         List<WorldJoinCommand> commandList = commandManager.getWorldJoinCommandList();
-        
-        for(WorldJoinCommand command : commandList) {
-            if(!command.shouldBeExecutedFor(this.plugin, player, world)) {
+
+        for (WorldJoinCommand command : commandList) {
+            if (!command.shouldBeExecutedFor(this.plugin, player, world)) {
                 continue;
             }
-    
+
             long delay = command.getDelay();
             Runnable task = () -> command.executeFor(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
-    
+
     private void setJoinedServerBefore(Player player) {
-        if(player == null) {
+        if (player == null) {
             return;
         }
-        
+
         PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
         YamlConfiguration config = playerDataManager.get(player);
-        if(config.getBoolean("join-commands.played-before")) {
+        if (config.getBoolean("join-commands.played-before")) {
             return;
         }
-        
+
         config.set("join-commands.played-before", true);
         playerDataManager.save(player);
     }
-    
+
     private void setJoinedWorldBefore(Player player, World world) {
-        if(player == null || world == null) {
+        if (player == null || world == null) {
             return;
         }
-        
+
         String worldName = world.getName();
         PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
         YamlConfiguration config = playerDataManager.get(player);
-        
+
         List<String> worldList = config.getStringList("join-commands.played-before-world-list");
-        if(worldList.contains(worldName)) {
+        if (worldList.contains(worldName)) {
             return;
         }
-        
+
         worldList.add(worldName);
         config.set("join-commands.played-before-world-list", worldList);
         playerDataManager.save(player);
     }
-    
+
     private void sendDebug(String... messageArray) {
         FileConfiguration configuration = this.plugin.getConfig();
-        if(!configuration.getBoolean("debug-mode", false)) {
+        if (!configuration.getBoolean("debug-mode", false)) {
             return;
         }
-        
+
         Logger logger = this.plugin.getLogger();
-        for(String message : messageArray) {
+        for (String message : messageArray) {
             String logMessage = String.format(Locale.US, "[Debug] %s", message);
             logger.info(logMessage);
         }
