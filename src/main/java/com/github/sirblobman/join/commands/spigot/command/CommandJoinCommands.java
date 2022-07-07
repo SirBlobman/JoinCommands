@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 
 import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
@@ -40,5 +41,11 @@ public final class CommandJoinCommands implements TabExecutor {
         this.plugin.reloadConfig();
         sender.sendMessage(ChatColor.GREEN + "Successfully reloaded the JoinCommands configuration.");
         return true;
+    }
+
+    public void register() {
+        PluginCommand pluginCommand = this.plugin.getCommand("join-commands");
+        pluginCommand.setExecutor(this);
+        pluginCommand.setTabCompleter(this);
     }
 }

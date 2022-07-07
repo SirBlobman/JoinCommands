@@ -26,7 +26,7 @@ import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
 import com.github.sirblobman.join.commands.bungee.manager.CommandManager;
 import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
 
-public class ListenerJoinCommands implements Listener {
+public final class ListenerJoinCommands implements Listener {
     private final JoinCommandsBungee plugin;
     
     public ListenerJoinCommands(JoinCommandsBungee plugin) {

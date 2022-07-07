@@ -12,7 +12,7 @@ import net.md_5.bungee.config.Configuration;
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
 
-public class ProxyJoinCommand {
+public final class ProxyJoinCommand {
     private final List<String> commandList;
     private final String permission;
     private final boolean firstJoinOnly;

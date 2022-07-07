@@ -22,8 +22,9 @@ import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.Validate;
 
-public class WorldJoinCommand {
-    private final List<String> worldNameList, commandList;
+public final class WorldJoinCommand {
+    private final List<String> worldNameList;
+    private final List<String> commandList;
     private final String permission;
     private final boolean firstJoinOnly;
     private final long delay;

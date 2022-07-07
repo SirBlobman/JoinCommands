@@ -21,7 +21,7 @@ import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.Validate;
 
-public class ServerJoinCommand {
+public final class ServerJoinCommand {
     private final List<String> commandList;
     private final String permission;
     private final boolean firstJoinOnly;

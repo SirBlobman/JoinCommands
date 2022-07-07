@@ -85,7 +85,6 @@ public final class JoinCommandsBungee extends Plugin {
     }
     
     private void loadConfig() {
-        
         try {
             File pluginFolder = getDataFolder();
             if(!pluginFolder.exists()) {

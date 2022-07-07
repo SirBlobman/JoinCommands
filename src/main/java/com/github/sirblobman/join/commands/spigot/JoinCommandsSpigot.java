@@ -13,7 +13,7 @@ import com.github.sirblobman.join.commands.spigot.command.CommandJoinCommands;
 import com.github.sirblobman.join.commands.spigot.listener.ListenerJoinCommands;
 import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
 
-public class JoinCommandsSpigot extends JavaPlugin {
+public final class JoinCommandsSpigot extends JavaPlugin {
     private final PlayerDataManager playerDataManager;
     private final CommandManager commandManager;
     
@@ -29,11 +29,8 @@ public class JoinCommandsSpigot extends JavaPlugin {
         
         registerBungeeCordChannels();
         registerListener();
-        
-        CommandJoinCommands commandExecutor = new CommandJoinCommands(this);
-        PluginCommand pluginCommand = getCommand("join-commands");
-        pluginCommand.setExecutor(commandExecutor);
-        pluginCommand.setTabCompleter(commandExecutor);
+
+        new CommandJoinCommands(this).register();
     }
     
     @Override

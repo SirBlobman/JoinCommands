@@ -22,7 +22,7 @@ import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
 import com.github.sirblobman.join.commands.spigot.object.ServerJoinCommand;
 import com.github.sirblobman.join.commands.spigot.object.WorldJoinCommand;
 
-public class ListenerJoinCommands implements Listener {
+public final class ListenerJoinCommands implements Listener {
     private final JoinCommandsSpigot plugin;
     
     public ListenerJoinCommands(JoinCommandsSpigot plugin) {

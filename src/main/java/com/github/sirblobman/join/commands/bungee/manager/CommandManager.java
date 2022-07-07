@@ -12,7 +12,7 @@ import net.md_5.bungee.config.Configuration;
 import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
 import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
 
-public class CommandManager {
+public final class CommandManager {
     private final JoinCommandsBungee plugin;
     private final List<ProxyJoinCommand> proxyJoinCommandList;
     

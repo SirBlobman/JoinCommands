@@ -14,13 +14,15 @@ import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
 import com.github.sirblobman.join.commands.spigot.object.ServerJoinCommand;
 import com.github.sirblobman.join.commands.spigot.object.WorldJoinCommand;
 
-public class CommandManager {
+public final class CommandManager {
     private final JoinCommandsSpigot plugin;
-    private final List<ServerJoinCommand> serverJoinCommandList = new ArrayList<>();
-    private final List<WorldJoinCommand> worldJoinCommandList = new ArrayList<>();
+    private final List<ServerJoinCommand> serverJoinCommandList;
+    private final List<WorldJoinCommand> worldJoinCommandList;
     
     public CommandManager(JoinCommandsSpigot plugin) {
         this.plugin = plugin;
+        this.serverJoinCommandList = new ArrayList<>();
+        this.worldJoinCommandList = new ArrayList<>();
     }
     
     public void loadServerJoinCommands() {
