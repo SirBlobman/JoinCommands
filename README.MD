@@ -10,7 +10,7 @@ Join Commands is a plugin for Spigot and BungeeCord that allows you to execute c
 
 ## Requirements
 - Spigot 1.8.8+
-- BungeeCord 1.16+
+- BungeeCord 1.19+
 
 ## How to install?
 **Spigot Server**
