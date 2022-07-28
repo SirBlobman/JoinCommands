@@ -1,11 +1,13 @@
 package com.github.sirblobman.join.commands.spigot.object;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -20,6 +22,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class ServerJoinCommand {
     private final List<String> commandList;
@@ -36,27 +40,36 @@ public final class ServerJoinCommand {
         this.delay = delay;
     }
 
+    @NotNull
+    public List<String> getCommands() {
+        return Collections.unmodifiableList(this.commandList);
+    }
+
+    @Nullable
+    public String getPermission() {
+        return this.permission;
+    }
+
+    public boolean isFirstJoinOnly() {
+        return this.firstJoinOnly;
+    }
+
     public long getDelay() {
         return this.delay;
     }
 
     public boolean shouldBeExecutedFor(JoinCommandsSpigot plugin, Player player) {
-        if (plugin == null || player == null) {
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
+
+        if(isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
             return false;
         }
 
-        if (this.firstJoinOnly) {
-            PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
-            YamlConfiguration configuration = playerDataManager.get(player);
-
-            boolean hasJoinedBefore = configuration.getBoolean("join-commands.played-before", false);
-            if (hasJoinedBefore) {
-                return false;
-            }
-        }
-
-        if (this.permission != null && !this.permission.isEmpty()) {
-            Permission permission = new Permission(this.permission, "A permission that allows a specific server join command to be executed.", PermissionDefault.FALSE);
+        String permissionName = getPermission();
+        if(permissionName != null && !permissionName.isEmpty()) {
+            String permissionDescription = "A permission that allows a specific join command to be executed.";
+            Permission permission = new Permission(permissionName, permissionDescription, PermissionDefault.FALSE);
             return player.hasPermission(permission);
         }
 
@@ -64,56 +77,73 @@ public final class ServerJoinCommand {
     }
 
     public void executeFor(JoinCommandsSpigot plugin, Player player) {
-        if (plugin == null || player == null) {
-            return;
-        }
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
 
         String playerName = player.getName();
-        for (String command : this.commandList) {
-            command = command.replace("{player}", playerName);
+        List<String> commandList = getCommands();
 
-            if (plugin.usePlaceholderAPIHook()) {
-                command = PlaceholderAPI.setPlaceholders(player, command);
+        for (String originalCommand : commandList) {
+            String replacedCommand = originalCommand.replace("{player}", playerName);
+            if(plugin.usePlaceholderAPIHook()) {
+                replacedCommand = PlaceholderAPI.setPlaceholders(player, replacedCommand);
             }
 
-            if (command.toLowerCase().startsWith("[player]")) {
-                command = command.substring("[player]".length());
-                runAsPlayer(player, command);
-            } else if (command.toLowerCase().startsWith("[op]")) {
-                command = command.substring("[op]".length());
-                runAsOp(player, command);
-            } else if (command.toLowerCase().startsWith("[bplayer]")) {
-                command = command.substring("[bplayer]".length());
-                runAsBungeePlayer(plugin, player, command);
-            } else if (command.toLowerCase().startsWith("[bconsole]")) {
-                command = command.substring("[bconsole]".length());
-                runAsBungeeConsole(plugin, player, command);
+            if(replacedCommand.startsWith("[PLAYER]")) {
+                String playerCommand = replacedCommand.substring(8);
+                runAsPlayer(player, playerCommand);
+            } else if(replacedCommand.startsWith("[OP]")) {
+                String opCommand = replacedCommand.substring(4);
+                runAsOp(player, opCommand);
+            } else if(replacedCommand.startsWith("[BPLAYER]")) {
+                String bplayerCommand = replacedCommand.substring(9);
+                runAsBungeePlayer(plugin, player, bplayerCommand);
+            } else if(replacedCommand.startsWith("[BCONSOLE]")) {
+                String bconsoleCommand = replacedCommand.substring(10);
+                runAsBungeeConsole(plugin, player, bconsoleCommand);
             } else {
-                runAsConsole(command);
+                runAsConsole(replacedCommand);
             }
         }
     }
 
-    private void runAsPlayer(Player player, String command) {
-        if (player == null || command == null || command.isEmpty()) {
-            return;
+    private boolean hasJoinedBefore(JoinCommandsSpigot plugin, Player player) {
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
+
+        FileConfiguration configuration = plugin.getConfig();
+        if(configuration.getBoolean("disable-player-data", false)) {
+            return false;
         }
 
-        PluginManager manager = Bukkit.getPluginManager();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        YamlConfiguration playerData = playerDataManager.get(player);
+        return playerData.getBoolean("join-commands.played-before", false);
+    }
+
+    private void runAsPlayer(Player player, String command) {
+        Validate.notNull(player, "player must not be null!");
+        Validate.notEmpty(command, "command must not be empty!");
+
         PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, "/" + command);
-        manager.callEvent(event);
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.callEvent(event);
         if (event.isCancelled()) {
             return;
         }
 
-        String actualCommand = event.getMessage().substring(1);
-        player.performCommand(actualCommand);
+        try {
+            String eventMessage = event.getMessage();
+            String actualCommand = eventMessage.substring(1);
+            player.performCommand(actualCommand);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void runAsOp(Player player, String command) {
-        if (player == null || command == null || command.isEmpty()) {
-            return;
-        }
+        Validate.notNull(player, "player must not be null!");
+        Validate.notEmpty(command, "command must not be empty!");
 
         if (player.isOp()) {
             runAsPlayer(player, command);
@@ -126,46 +156,51 @@ public final class ServerJoinCommand {
     }
 
     private void runAsConsole(String command) {
-        if (command == null || command.isEmpty()) {
-            return;
-        }
+        Validate.notEmpty(command, "command must not be empty!");
 
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
-        Bukkit.dispatchCommand(console, command);
+        try {
+            ConsoleCommandSender console = Bukkit.getConsoleSender();
+            Bukkit.dispatchCommand(console, command);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeePlayer(JoinCommandsSpigot plugin, Player player, String command) {
-        if (plugin == null || player == null || command == null || command.isEmpty()) {
-            return;
-        }
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
+        Validate.notEmpty(command, "command must not be empty!");
 
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
             dataOutput.writeUTF(command);
-            byte[] message = dataOutput.toByteArray();
 
+            byte[] message = dataOutput.toByteArray();
             player.sendPluginMessage(plugin, "jc:player", message);
         } catch (Exception ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:player'. Is the BungeeCord proxy online?", ex);
+            logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:player'. " +
+                    "Is the BungeeCord proxy online?", ex);
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
     private void runAsBungeeConsole(JoinCommandsSpigot plugin, Player player, String command) {
-        if (plugin == null || player == null || command == null || command.isEmpty()) {
-            return;
-        }
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
+        Validate.notEmpty(command, "command must not be empty!");
 
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
             dataOutput.writeUTF(command);
+
             byte[] message = dataOutput.toByteArray();
             player.sendPluginMessage(plugin, "jc:console", message);
         } catch (Exception ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:console'. Is the BungeeCord proxy online?", ex);
+            logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:console'. " +
+                    "Is the BungeeCord proxy online?", ex);
         }
     }
 }

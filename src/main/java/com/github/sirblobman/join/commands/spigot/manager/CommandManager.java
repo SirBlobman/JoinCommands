@@ -25,11 +25,24 @@ public final class CommandManager {
         this.worldJoinCommandList = new ArrayList<>();
     }
 
+    public JoinCommandsSpigot getPlugin() {
+        return this.plugin;
+    }
+
+    public List<ServerJoinCommand> getJoinCommandList() {
+        return Collections.unmodifiableList(this.serverJoinCommandList);
+    }
+
+    public List<WorldJoinCommand> getWorldJoinCommandList() {
+        return Collections.unmodifiableList(this.worldJoinCommandList);
+    }
+
     public void loadServerJoinCommands() {
         this.serverJoinCommandList.clear();
 
-        Logger logger = this.plugin.getLogger();
-        FileConfiguration config = this.plugin.getConfig();
+        JoinCommandsSpigot plugin = getPlugin();
+        Logger logger = plugin.getLogger();
+        FileConfiguration config = plugin.getConfig();
         if (config == null) {
             return;
         }
@@ -83,15 +96,12 @@ public final class CommandManager {
         }
     }
 
-    public List<ServerJoinCommand> getJoinCommandList() {
-        return Collections.unmodifiableList(this.serverJoinCommandList);
-    }
-
     public void loadWorldJoinCommands() {
         this.worldJoinCommandList.clear();
 
-        Logger logger = this.plugin.getLogger();
-        FileConfiguration config = this.plugin.getConfig();
+        JoinCommandsSpigot plugin = getPlugin();
+        Logger logger = plugin.getLogger();
+        FileConfiguration config = plugin.getConfig();
         if (config == null) {
             return;
         }
@@ -144,9 +154,5 @@ public final class CommandManager {
                     + commandId + "':", ex);
             return null;
         }
-    }
-
-    public List<WorldJoinCommand> getWorldJoinCommandList() {
-        return Collections.unmodifiableList(this.worldJoinCommandList);
     }
 }

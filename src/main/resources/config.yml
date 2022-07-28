@@ -5,6 +5,10 @@
 # This will send extra output to console about the plugin.
 debug-mode: false
 
+# Set this to true to disable player data files.
+# Using this option will cause problems with the 'first-join-only' options.
+disable-player-data: false
+
 # Start Spigot Options
 # These options are only used on the server
 spigot-options:

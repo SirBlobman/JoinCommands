@@ -21,10 +21,19 @@ public final class CommandManager {
         this.proxyJoinCommandList = new ArrayList<>();
     }
 
+    public JoinCommandsBungee getPlugin() {
+        return this.plugin;
+    }
+
+    public List<ProxyJoinCommand> getProxyJoinCommandList() {
+        return Collections.unmodifiableList(this.proxyJoinCommandList);
+    }
+
     public void loadProxyJoinCommands() {
         this.proxyJoinCommandList.clear();
 
-        Configuration configuration = this.plugin.getConfig();
+        JoinCommandsBungee plugin = getPlugin();
+        Configuration configuration = plugin.getConfig();
         if (configuration == null) {
             return;
         }
@@ -54,10 +63,6 @@ public final class CommandManager {
         }
     }
 
-    public List<ProxyJoinCommand> getProxyJoinCommandList() {
-        return Collections.unmodifiableList(this.proxyJoinCommandList);
-    }
-
     private ProxyJoinCommand loadProxyJoinCommand(String commandId, Configuration section) {
         if (section == null) {
             return null;
@@ -71,7 +76,8 @@ public final class CommandManager {
         try {
             return new ProxyJoinCommand(commandList, permission, firstJoinOnly, delay);
         } catch (Exception ex) {
-            Logger logger = this.plugin.getLogger();
+            JoinCommandsBungee plugin = getPlugin();
+            Logger logger = plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while loading the proxy join command with id '"
                     + commandId + "':", ex);
             return null;

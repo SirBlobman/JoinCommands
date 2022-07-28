@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.github.sirblobman.api.configuration.PlayerDataManager;
+import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
 import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
 import com.github.sirblobman.join.commands.spigot.object.ServerJoinCommand;
@@ -74,6 +75,15 @@ public final class ListenerJoinCommands implements Listener {
         sendDebug("Finished PlayerChangedWorldEvent checks.");
     }
 
+    private JoinCommandsSpigot getPlugin() {
+        return this.plugin;
+    }
+
+    private FileConfiguration getConfiguration() {
+        JoinCommandsSpigot plugin = getPlugin();
+        return plugin.getConfig();
+    }
+
     private void runServerJoinComands(Player player) {
         if (player == null) {
             return;
@@ -109,52 +119,62 @@ public final class ListenerJoinCommands implements Listener {
             }
 
             long delay = command.getDelay();
-            Runnable task = () -> command.executeFor(this.plugin, player);
+            Runnable task = () -> command.executeFor(this.plugin, player, world);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
 
     private void setJoinedServerBefore(Player player) {
-        if (player == null) {
+        Validate.notNull(player, "player must not be null!");
+
+        FileConfiguration configuration = getConfiguration();
+        if(configuration.getBoolean("disable-player-data", false)) {
             return;
         }
 
-        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
-        YamlConfiguration config = playerDataManager.get(player);
-        if (config.getBoolean("join-commands.played-before")) {
+        JoinCommandsSpigot plugin = getPlugin();
+        PlayerDataManager playerDataManager = plugin.getPlayerDataManager();
+        YamlConfiguration playerData = playerDataManager.get(player);
+        if (playerData.getBoolean("join-commands.played-before", false)) {
             return;
         }
 
-        config.set("join-commands.played-before", true);
+        playerData.set("join-commands.played-before", true);
         playerDataManager.save(player);
     }
 
     private void setJoinedWorldBefore(Player player, World world) {
-        if (player == null || world == null) {
+        Validate.notNull(player, "player must not be null!");
+        Validate.notNull(world, "world must not be null!");
+
+        FileConfiguration configuration = getConfiguration();
+        if(configuration.getBoolean("disable-player-data", false)) {
             return;
         }
 
         String worldName = world.getName();
         PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
-        YamlConfiguration config = playerDataManager.get(player);
+        YamlConfiguration playerData = playerDataManager.get(player);
 
-        List<String> worldList = config.getStringList("join-commands.played-before-world-list");
+        String path = "join-commands.played-before-world-list";
+        List<String> worldList = playerData.getStringList(path);
         if (worldList.contains(worldName)) {
             return;
         }
 
         worldList.add(worldName);
-        config.set("join-commands.played-before-world-list", worldList);
+        playerData.set(path, worldList);
         playerDataManager.save(player);
     }
 
     private void sendDebug(String... messageArray) {
-        FileConfiguration configuration = this.plugin.getConfig();
+        FileConfiguration configuration = getConfiguration();
         if (!configuration.getBoolean("debug-mode", false)) {
             return;
         }
 
-        Logger logger = this.plugin.getLogger();
+        JoinCommandsSpigot plugin = getPlugin();
+        Logger logger = plugin.getLogger();
         for (String message : messageArray) {
             String logMessage = String.format(Locale.US, "[Debug] %s", message);
             logger.info(logMessage);

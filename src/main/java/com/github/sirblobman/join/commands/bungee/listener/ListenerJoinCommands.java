@@ -22,6 +22,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
+import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
 import com.github.sirblobman.join.commands.bungee.manager.CommandManager;
 import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;
@@ -63,70 +64,80 @@ public final class ListenerJoinCommands implements Listener {
         setJoinedProxyBefore(player);
     }
 
+    private JoinCommandsBungee getPlugin() {
+        return this.plugin;
+    }
+
     private void runPlayerCommand(ProxiedPlayer player, byte[] data) {
-        if (player == null || data == null) {
-            return;
-        }
+        Validate.notNull(player, "player must not be null!");
+        Validate.notNull(data, "data must not be null!");
+        JoinCommandsBungee plugin = getPlugin();
 
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             DataInputStream dataStream = new DataInputStream(inputStream);
             String command = dataStream.readUTF();
 
-            ProxyServer proxy = this.plugin.getProxy();
+            ProxyServer proxy = plugin.getProxy();
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(player, command);
         } catch (IOException ex) {
-            Logger logger = this.plugin.getLogger();
+            Logger logger = plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while parsing a jc:player command:", ex);
         }
     }
 
     private void runConsoleCommand(byte[] data) {
-        if (data == null) {
-            return;
-        }
+        Validate.notNull(data, "data must not be null!");
+        JoinCommandsBungee plugin = getPlugin();
 
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             DataInputStream dataStream = new DataInputStream(inputStream);
             String command = dataStream.readUTF();
 
-            ProxyServer proxy = this.plugin.getProxy();
+            ProxyServer proxy = plugin.getProxy();
             CommandSender console = proxy.getConsole();
 
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(console, command);
         } catch (IOException ex) {
-            Logger logger = this.plugin.getLogger();
+            Logger logger = plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while parsing a jc:player command:", ex);
         }
     }
 
     private void runProxyJoinCommands(ProxiedPlayer player) {
-        CommandManager commandManager = this.plugin.getCommandManager();
+        JoinCommandsBungee plugin = getPlugin();
+        CommandManager commandManager = plugin.getCommandManager();
         List<ProxyJoinCommand> commandList = commandManager.getProxyJoinCommandList();
 
-        ProxyServer proxy = this.plugin.getProxy();
+        ProxyServer proxy = plugin.getProxy();
         TaskScheduler scheduler = proxy.getScheduler();
 
         for (ProxyJoinCommand command : commandList) {
-            if (!command.shouldBeExecutedFor(this.plugin, player)) {
+            if (!command.shouldBeExecutedFor(plugin, player)) {
                 continue;
             }
 
             long delay = command.getDelay();
-            Runnable task = () -> command.executeFor(this.plugin, player);
+            Runnable task = () -> command.executeFor(plugin, player);
             scheduler.schedule(plugin, task, delay, TimeUnit.SECONDS);
         }
     }
 
     private void setJoinedProxyBefore(ProxiedPlayer player) {
-        Configuration config = this.plugin.getConfig();
-        UUID uuid = player.getUniqueId();
-        String uuidString = uuid.toString();
+        JoinCommandsBungee plugin = getPlugin();
+        Configuration configuration = plugin.getConfig();
+        if(configuration.getBoolean("disable-player-data", false)) {
+            return;
+        }
 
-        config.set("joined-before." + uuidString, true);
-        this.plugin.saveConfig();
+        UUID playerId = player.getUniqueId();
+        String playerIdString = playerId.toString();
+        String path = ("joined-before." + playerIdString);
+
+        configuration.set(path, true);
+        plugin.saveConfig();
     }
 }

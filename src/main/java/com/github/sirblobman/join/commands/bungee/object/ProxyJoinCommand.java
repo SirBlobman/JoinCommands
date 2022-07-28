@@ -1,7 +1,10 @@
 package com.github.sirblobman.join.commands.bungee.object;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -11,6 +14,8 @@ import net.md_5.bungee.config.Configuration;
 
 import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
+
+import org.jetbrains.annotations.NotNull;
 
 public final class ProxyJoinCommand {
     private final List<String> commandList;
@@ -26,27 +31,34 @@ public final class ProxyJoinCommand {
         this.delay = delay;
     }
 
+    @NotNull
+    public List<String> getCommands() {
+        return Collections.unmodifiableList(this.commandList);
+    }
+
+    @NotNull
+    public String getPermission() {
+        return this.permission;
+    }
+
+    public boolean isFirstJoinOnly() {
+        return this.firstJoinOnly;
+    }
+
     public long getDelay() {
         return this.delay;
     }
 
     public boolean shouldBeExecutedFor(JoinCommandsBungee plugin, ProxiedPlayer player) {
-        if (plugin == null || player == null) {
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
+
+        if(isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
             return false;
         }
 
-        if (this.firstJoinOnly) {
-            Configuration config = plugin.getConfig();
-            UUID uuid = player.getUniqueId();
-            String uuidString = uuid.toString();
-
-            boolean hasJoinedBefore = config.getBoolean("joined-before." + uuidString, false);
-            if (hasJoinedBefore) {
-                return false;
-            }
-        }
-
-        if (!this.permission.isEmpty()) {
+        String permission = getPermission();
+        if (!permission.isEmpty()) {
             return player.hasPermission(this.permission);
         }
 
@@ -54,43 +66,63 @@ public final class ProxyJoinCommand {
     }
 
     public void executeFor(JoinCommandsBungee plugin, ProxiedPlayer player) {
-        if (plugin == null || player == null) {
-            return;
-        }
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
 
         String playerName = player.getName();
-        for (String command : this.commandList) {
-            command = command.replace("{player}", playerName);
-
-            if (command.toLowerCase().startsWith("[player]")) {
-                command = command.substring("[player]".length());
-                runAsPlayer(plugin, player, command);
-                continue;
+        List<String> commandList = getCommands();
+        for (String originalCommand : commandList) {
+            String replacedCommand = originalCommand.replace("{player}", playerName);
+            if(replacedCommand.startsWith("[PLAYER]")) {
+                String playerCommand = replacedCommand.substring(8);
+                runAsPlayer(plugin, player, playerCommand);
+            } else {
+                runAsConsole(plugin, replacedCommand);
             }
-
-            runAsConsole(plugin, command);
         }
+    }
+
+    private boolean hasJoinedBefore(JoinCommandsBungee plugin, ProxiedPlayer player) {
+        Configuration configuration = plugin.getConfig();
+        if(configuration.getBoolean("disable-player-data", false)) {
+            return false;
+        }
+
+        UUID playerId = player.getUniqueId();
+        String playerIdString = playerId.toString();
+        String path = ("joined-before." + playerIdString);
+        return configuration.getBoolean(path, false);
     }
 
     private void runAsPlayer(JoinCommandsBungee plugin, ProxiedPlayer player, String command) {
-        if (plugin == null || player == null || command == null || command.isEmpty()) {
-            return;
-        }
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notNull(player, "player must not be null!");
+        Validate.notEmpty(command, "command must not be empty!");
 
-        ProxyServer proxy = plugin.getProxy();
-        PluginManager manager = proxy.getPluginManager();
-        manager.dispatchCommand(player, command);
+        try {
+            ProxyServer proxy = plugin.getProxy();
+            PluginManager manager = proxy.getPluginManager();
+            manager.dispatchCommand(player, command);
+        } catch(Exception ex) {
+            Logger logger = plugin.getLogger();
+            String errorMessage = "An error occurred while executing command '/" + command + "' as a player:";
+            logger.log(Level.WARNING, errorMessage, ex);
+        }
     }
 
     private void runAsConsole(JoinCommandsBungee plugin, String command) {
-        if (plugin == null || command == null || command.isEmpty()) {
-            return;
+        Validate.notNull(plugin, "plugin must not be null!");
+        Validate.notEmpty(command, "command must not be empty!");
+
+        try {
+            ProxyServer proxy = plugin.getProxy();
+            CommandSender console = proxy.getConsole();
+            PluginManager manager = proxy.getPluginManager();
+            manager.dispatchCommand(console, command);
+        } catch(Exception ex) {
+            Logger logger = plugin.getLogger();
+            String errorMessage = "An error occurred while executing command '/" + command + "' in console:";
+            logger.log(Level.WARNING, errorMessage, ex);
         }
-
-        ProxyServer proxy = plugin.getProxy();
-        CommandSender console = proxy.getConsole();
-
-        PluginManager manager = proxy.getPluginManager();
-        manager.dispatchCommand(console, command);
     }
 }

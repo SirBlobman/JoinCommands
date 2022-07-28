@@ -22,14 +22,23 @@ public final class JoinCommandsSpigot extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         saveDefaultConfig();
+    }
+
+    @Override
+    public void onEnable() {
         reloadConfig();
 
         registerBungeeCordChannels();
         registerListener();
 
         new CommandJoinCommands(this).register();
+    }
+
+    @Override
+    public void onDisable() {
+        // Do Nothing
     }
 
     @Override
