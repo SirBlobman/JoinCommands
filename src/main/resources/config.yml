@@ -21,20 +21,24 @@ spigot-options:
   placeholderapi-hook: true
 
 # This is a set of commands that will be executed when a player joins the spigot server.
+# 'exampleOne', 'example2', and 'example3' are the command IDs.
+# A command ID can be any valid YML section string, but they must all be different
+# To disable all server join commands, set the value to 'server-join-commands: {}'
 server-join-commands:
-  # 'exampleOne' is the command ID. This can be any valid YML section string, but they must all be different
   exampleOne:
-    # This is the list of commands that will be executed if the conditions are matched.
+    # 'command-list'  is the list of commands that will be executed if the conditions are matched.
     #
     # Valid Placeholders:
     # - {player} - The name of the player that joined
     #
     # Valid Prefixes:
-    # - no prefix - Execute the command as console (e.g. "eco give {player} 100")
+    # - no prefix - Execute the command as the serverconsole (e.g. "eco give {player} 100")
     # - [PLAYER] - Execute the command as a player (e.g. "[PLAYER]kit tools")
     # - [OP] - Execute the command as the player, but with OP permissions (e.g. "[OP]warp opsOnlyArea")
-    # - [BPLAYER] - Execute the command as the player, but through the BungeeCord Proxy (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
-    # - [BCONSOLE] - Execute the command as the BungeeCord Proxy console (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
+    # - [BPLAYER] - Execute the command as the player, but through the BungeeCord Proxy
+    # - [BCONSOLE] - Execute the command as the BungeeCord Proxy console
+    #
+    # Using [BPLAYER] or [BCONSOLE] require you to setup the 'bungeecord-hook' option properly.
     command-list:
       - "msg {player} Hello!"
       - "say {player} joined the server!"
@@ -67,6 +71,8 @@ server-join-commands:
       - "msg {player} You are a donator, so you get free money for joining."
       - "eco give {player} 100"
 
+# A command ID can be any valid YML section string, but they must all be different
+# To disable all world join commands, set the value to 'world-join-commands: {}'
 world-join-commands:
   exampleOneWorld:
     # This is the list of worlds that this command will be executed in
@@ -75,23 +81,16 @@ world-join-commands:
       - "world_nether"
       - "world_the_end"
 
-    # Valid Placeholders:
-    # - {player} - The name of the player that joined
+    # Extra Placeholders:
     # - {world} - The name of the world that the player joined
-    #
-    # Valid Prefixes:
-    # - no prefix - Execute the command as console (e.g. "eco give {player} 100")
-    # - [PLAYER] - Execute the command as a player (e.g. "[PLAYER]kit tools")
-    # - [OP] - Execute the command as the player, but with OP permissions (e.g. "[OP]warp opsOnlyArea")
-    # - [BPLAYER] - Execute the command as the player, but through the BungeeCord Proxy (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
-    # - [BCONSOLE] - Execute the command as the BungeeCord Proxy console (requires 'bungeecord-hook' to be true and the proxy to be setup properly)
     command-list:
       - "msg {player} You are now in {world}"
 
     delay: 0
 
     # Should this command only be executed when the player first joins the world?
-    # Once a player has joined a world, a data file will be created for them and any commands with 'first-join-only: true' will not be executed for them
+    # Once a player has joined a world, a data file will be created for them and any commands with
+    # 'first-join-only: true' will not be executed for them.
     first-join-only: false
     permission: ""
 
@@ -105,10 +104,14 @@ world-join-commands:
     delay: 20
     first-join-only: false
     permission: ""
+
 # End Spigot Options
 
 # Start BungeeCord Options
 # These options are only used on the proxy
+
+# A command ID can be any valid YML section string, but they must all be different
+# To disable all proxy join commands, set the value to 'proxy-join-commands: {}'
 proxy-join-commands:
   exampleOneProxy:
     permission: "always.survival"
