@@ -22,7 +22,8 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
-import com.github.sirblobman.api.utility.Validate;
+
+import com.github.sirblobman.join.commands.utility.Validate;
 import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
 import com.github.sirblobman.join.commands.bungee.manager.CommandManager;
 import com.github.sirblobman.join.commands.bungee.object.ProxyJoinCommand;

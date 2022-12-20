@@ -12,9 +12,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 
-import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.join.commands.bungee.JoinCommandsBungee;
 
+import com.github.sirblobman.join.commands.utility.Validate;
 import org.jetbrains.annotations.NotNull;
 
 public final class ProxyJoinCommand {

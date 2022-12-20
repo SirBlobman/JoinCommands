@@ -16,9 +16,9 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
-import com.github.sirblobman.api.configuration.PlayerDataManager;
-import com.github.sirblobman.api.utility.Validate;
 import com.github.sirblobman.join.commands.spigot.JoinCommandsSpigot;
+import com.github.sirblobman.join.commands.spigot.manager.PlayerDataManager;
+import com.github.sirblobman.join.commands.utility.Validate;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -29,18 +29,20 @@ import org.jetbrains.annotations.Nullable;
 public final class WorldJoinCommand {
     private final List<String> worldNameList;
     private final List<String> commandList;
-    private final String permission;
+    private final String permissionName;
     private final boolean firstJoinOnly;
     private final long delay;
 
-    public WorldJoinCommand(List<String> worldNameList, List<String> commandList, String permission,
+    private transient Permission permission;
+
+    public WorldJoinCommand(List<String> worldNameList, List<String> commandList, String permissionName,
                             boolean firstJoinOnly, long delay) {
         Validate.notNull(worldNameList, "worldNameList must not be null.");
         Validate.notEmpty(commandList, "commandList must not be empty or null.");
 
         this.worldNameList = worldNameList;
         this.commandList = commandList;
-        this.permission = permission;
+        this.permissionName = permissionName;
         this.firstJoinOnly = firstJoinOnly;
         this.delay = delay;
     }
@@ -56,8 +58,8 @@ public final class WorldJoinCommand {
     }
 
     @Nullable
-    public String getPermission() {
-        return this.permission;
+    public String getPermissionName() {
+        return this.permissionName;
     }
 
     public boolean isFirstJoinOnly() {
@@ -66,6 +68,20 @@ public final class WorldJoinCommand {
 
     public long getDelay() {
         return this.delay;
+    }
+
+    public Permission getPermission() {
+        if (this.permissionName == null || this.permissionName.isEmpty()) {
+            return null;
+        }
+
+        if (this.permission == null) {
+            String permissionName = getPermissionName();
+            String permissionDescription = "A permission that allows a specific join command to be executed.";
+            this.permission = new Permission(permissionName, permissionDescription, PermissionDefault.FALSE);
+        }
+
+        return this.permission;
     }
 
     public boolean shouldBeExecutedFor(JoinCommandsSpigot plugin, Player player, World world) {
@@ -87,10 +103,8 @@ public final class WorldJoinCommand {
             return false;
         }
 
-        String permissionName = getPermission();
-        if(permissionName != null && !permissionName.isEmpty()) {
-            String permissionDescription = "A permission that allows a specific world join command to be executed.";
-            Permission permission = new Permission(permissionName, permissionDescription, PermissionDefault.FALSE);
+        Permission permission = getPermission();
+        if (permission != null) {
             return player.hasPermission(permission);
         }
 

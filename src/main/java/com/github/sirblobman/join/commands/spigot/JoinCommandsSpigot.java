@@ -7,10 +7,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
-import com.github.sirblobman.api.configuration.PlayerDataManager;
 import com.github.sirblobman.join.commands.spigot.command.CommandJoinCommands;
 import com.github.sirblobman.join.commands.spigot.listener.ListenerJoinCommands;
 import com.github.sirblobman.join.commands.spigot.manager.CommandManager;
+import com.github.sirblobman.join.commands.spigot.manager.PlayerDataManager;
 
 public final class JoinCommandsSpigot extends JavaPlugin {
     private final PlayerDataManager playerDataManager;
