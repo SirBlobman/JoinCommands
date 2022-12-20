@@ -114,40 +114,5 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.1</version>
-
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>com.github.sirblobman.api</pattern>
-                            <shadedPattern>com.github.sirblobman.join.commands.shaded.api</shadedPattern>
-                        </relocation>
-                    </relocations>
-
-                    <filters>
-                        <filter>
-                            <artifact>com.github.sirblobman.api:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/MANIFEST.MF</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>
