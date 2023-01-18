@@ -164,9 +164,12 @@ public final class ServerJoinCommand {
             return;
         }
 
-        player.setOp(true);
-        runAsPlayer(player, command);
-        player.setOp(false);
+        try {
+            player.setOp(true);
+            runAsPlayer(player, command);
+        } finally {
+            player.setOp(false);
+        }
     }
 
     private void runAsConsole(String command) {
