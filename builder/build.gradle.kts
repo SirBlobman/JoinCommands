@@ -17,8 +17,9 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar") {
+        val calculatedVersion = rootProject.ext.get("calculatedVersion") as String
+        archiveFileName.set("JoinCommands-${calculatedVersion}.jar")
         archiveClassifier.set(null as String?)
-        archiveFileName.set("JoinCommands.jar")
     }
 
     build {
