@@ -1,7 +1,0 @@
-name: "${plugin.name}"
-prefix: "${plugin.prefix}"
-description: "${plugin.description}"
-
-main: "${plugin.bungeeMain}"
-version: "${plugin.version}"
-author: "SirBlobman"

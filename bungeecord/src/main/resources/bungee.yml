@@ -1,0 +1,7 @@
+name: "${plugin.name}"
+prefix: "${plugin.prefix}"
+description: "${plugin.description}"
+
+main: "${plugin.main}"
+version: "${plugin.version}"
+author: "SirBlobman"

@@ -1,0 +1,27 @@
+name: "${plugin.name}"
+prefix: "${plugin.prefix}"
+description: "${plugin.description}"
+
+main: "${plugin.main}"
+version: "${plugin.version}"
+api-version: "1.13"
+
+authors:
+  - "SirBlobman"
+
+softdepend:
+  - "PlaceholderAPI"
+
+commands:
+  join-commands:
+    description: "Main command for the JoinCommands plugin."
+    usage: "/<command> reload"
+    permission: "join.commands.reload"
+    aliases:
+      - "joincommands"
+      - "jc"
+
+permissions:
+  join.commands.reload:
+    description: "Allow access to the '/join-commands' command."
+    default: op

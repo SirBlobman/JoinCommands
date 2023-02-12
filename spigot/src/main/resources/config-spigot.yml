@@ -1,0 +1,104 @@
+# Default Configuration for Join Commands (Spigot Version)
+
+# Set this to true if you are trying to resolve an issue or SirBlobman asks you to.
+# This will send extra output to console about the plugin.
+debug-mode: false
+
+# Set this to true to disable player data files.
+# Using this option will cause problems with the 'first-join-only' options.
+disable-player-data: false
+
+# Does JoinCommands need to hook into BungeeCord?
+# This requires you to install JoinCommands on the BungeeCord proxy as well.
+bungeecord-hook: false
+
+# Does JoinCommands hook in to PlaceholderAPI
+# This will allow you to use their placeholders in commands
+placeholderapi-hook: true
+
+# This is a set of commands that will be executed when a player joins the spigot server.
+# 'exampleOne', 'example2', and 'example3' are the command IDs.
+# A command ID can be any valid YML section string, but they must all be different
+# To disable all server join commands, set the value to 'server-join-commands: {}'
+server-join-commands:
+  exampleOne:
+    # 'command-list'  is the list of commands that will be executed if the conditions are matched.
+    #
+    # Valid Placeholders:
+    # - {player} - The name of the player that joined
+    #
+    # Valid Prefixes:
+    # - no prefix - Execute the command as the serverconsole (e.g. "eco give {player} 100")
+    # - [PLAYER] - Execute the command as a player (e.g. "[PLAYER]kit tools")
+    # - [OP] - Execute the command as the player, but with OP permissions (e.g. "[OP]warp opsOnlyArea")
+    # - [BPLAYER] - Execute the command as the player, but through the BungeeCord Proxy
+    # - [BCONSOLE] - Execute the command as the BungeeCord Proxy console
+    #
+    # Using [BPLAYER] or [BCONSOLE] require you to setup the 'bungeecord-hook' option properly.
+    command-list:
+      - "msg {player} Hello!"
+      - "say {player} joined the server!"
+
+    # What permission does the player need to have before this command to be executed?
+    # Leave it blank for no permission check
+    # This is not the permission for the 'command-list'
+    permission: ""
+
+    # Should this command only be executed when the player first joins the server?
+    # Once a player has joined, a data file will be created for them and any commands with 'first-join-only: true' will not be executed for them
+    first-join-only: true
+
+    # How long should JoinCommands wait (in ticks) to execute the command list?
+    # 20 ticks = 1 second
+    delay: 20
+
+  example2:
+    permission: "i.hate.you"
+    first-join-only: false
+    delay: 0
+    command-list:
+      - "kill {player}"
+
+  example3:
+    permission: "donator.free.money"
+    first-join-only: false
+    delay: 100
+    command-list:
+      - "msg {player} You are a donator, so you get free money for joining."
+      - "eco give {player} 100"
+
+# A command ID can be any valid YML section string, but they must all be different
+# To disable all world join commands, set the value to 'world-join-commands: {}'
+world-join-commands:
+  exampleOneWorld:
+    # This is the list of worlds that this command will be executed in
+    world-list:
+      - "world"
+      - "world_nether"
+      - "world_the_end"
+
+    # Extra Placeholders:
+    # - {world} - The name of the world that the player joined
+    command-list:
+      - "msg {player} You are now in {world}"
+
+    delay: 0
+
+    # Should this command only be executed when the player first joins the world?
+    # Once a player has joined a world, a data file will be created for them and any commands with
+    # 'first-join-only: true' will not be executed for them.
+    first-join-only: false
+    permission: ""
+
+  exampleWorld2:
+    world-list:
+      - "world"
+
+    command-list:
+      - "msg {player} welcome back to the main world"
+
+    delay: 20
+    first-join-only: false
+    permission: ""
+
+# End of File

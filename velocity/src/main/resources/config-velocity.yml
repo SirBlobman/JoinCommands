@@ -1,0 +1,37 @@
+# Default Configuration for Join Commands (Velocity Version)
+
+# Set this to true if you are trying to resolve an issue or SirBlobman asks you to.
+# This will send extra output to console about the plugin.
+debug-mode: false
+
+# Set this to true to disable player data files.
+# Using this option will cause problems with the 'first-join-only' options.
+disable-player-data: false
+
+# A command ID can be any valid YML section string, but they must all be different
+# To disable all proxy join commands, set the value to 'proxy-join-commands: {}'
+proxy-join-commands:
+  exampleOneProxy:
+    permission: "always.survival"
+    first-join-only: false
+
+    # Delay for proxy is in seconds.
+    delay: 5
+
+    # Valid Placeholders:
+    # - {player} - The name of the player that joined
+    #
+    # Valid Prefixes:
+    # - no prefix - Execute the command as the proxy console (e.g. "eco give {player} 100")
+    # - [PLAYER] - Execute the command as the proxy player (e.g. "[PLAYER]kit tools")
+    command-list:
+      - "[PLAYER]server survival"
+
+  exampleProxy2:
+    permission: ""
+    first-join-only: true
+    delay: 20
+    command-list:
+      - "send {player} lobby"
+
+# End of File
