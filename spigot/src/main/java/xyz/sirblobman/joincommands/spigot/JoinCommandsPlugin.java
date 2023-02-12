@@ -1,5 +1,14 @@
 package xyz.sirblobman.joincommands.spigot;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -39,6 +48,34 @@ public final class JoinCommandsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         // Do Nothing
+    }
+
+    @Override
+    public void saveDefaultConfig() {
+        try {
+            File dataFolder = getDataFolder();
+            Path dataDirectory = dataFolder.toPath();
+            if (Files.notExists(dataDirectory)) {
+                Files.createDirectories(dataDirectory);
+            }
+
+            Path configFile = dataDirectory.resolve("config.yml");
+            if (Files.exists(configFile)) {
+                return;
+            }
+
+            Class<?> thisClass = getClass();
+            InputStream jarConfigStream = thisClass.getResourceAsStream("/config-spigot.yml");
+            if (jarConfigStream == null) {
+                throw new IOException("Missing file 'config-spigot.yml' in jar.");
+            }
+
+            Files.copy(jarConfigStream, configFile, StandardCopyOption.REPLACE_EXISTING);
+            jarConfigStream.close();
+        } catch(IOException ex) {
+            Logger logger = getLogger();
+            logger.log(Level.SEVERE, "An error occurred while saving the default configuration.", ex);
+        }
     }
 
     @Override

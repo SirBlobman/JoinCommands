@@ -8,8 +8,8 @@ debug-mode: false
 # Using this option will cause problems with the 'first-join-only' options.
 disable-player-data: false
 
-# Does JoinCommands need to hook into BungeeCord?
-# This requires you to install JoinCommands on the BungeeCord proxy as well.
+# Does JoinCommands need to hook into BungeeCord / Velocity?
+# This requires you to install JoinCommands on the proxy as well.
 bungeecord-hook: false
 
 # Does JoinCommands hook in to PlaceholderAPI

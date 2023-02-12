@@ -127,7 +127,7 @@ public final class JoinCommandsPlugin extends Plugin {
             }
 
             Path path = file.toPath();
-            InputStream configStream = getResourceAsStream("config.yml");
+            InputStream configStream = getResourceAsStream("config-bungee.yml");
             Files.copy(configStream, path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             Logger logger = getLogger();
