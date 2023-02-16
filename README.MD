@@ -25,8 +25,8 @@ Join Commands is a plugin for Spigot and BungeeCord that allows you to execute c
 4. A `config.yml` file should be generated in your server's `/plugins/` folder. Edit this file and add/remove the commands you want.
 5. Restart your server one more time. You can also do `/join-commands reload` but a restart is recommended.
 
-**BungeeCord Server**
+**Proxy Server**
 1. Download the JAR from the Spigot Page linked above.
-2. Install the plugin on all your spigot servers that are linked to the BungeeCord.
-2. Upload the JAR file to your BungeeCord proxy's `/plugins/` folder.
-3. Restart the proxy all servers linked to it so that the channels can be setup properly.
+2. Install the plugin on all your spigot servers that are linked to the proxy.
+3. Upload the JAR file to your proxy's `plugins` folder.
+4. Restart the proxy all servers linked to it so that the channels can be setup properly.
