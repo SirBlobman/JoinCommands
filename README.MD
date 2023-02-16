@@ -8,9 +8,14 @@ Join Commands is a plugin for Spigot and BungeeCord that allows you to execute c
 - A player joins the Spigot server.
 - A player joins a world within a Spigot server.
 
-## Requirements
-- Spigot 1.8.8+
-- BungeeCord 1.19+
+## Requirements (Spigot Server)
+- Spigot 1.8.8 - 1.19.3
+
+## Requirements (BungeeCord Proxy)
+- BungeeCord or Waterfall 1.19+
+
+## Requirements (Velocity Proxy)
+- Velocity 3.1.1+
 
 ## How to install?
 **Spigot Server**
