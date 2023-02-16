@@ -21,7 +21,7 @@ pipeline {
         stage("Gradle: Build") {
             steps {
                 withGradle {
-                    sh("./gradlew clean build publish --refresh-dependencies")
+                    sh("./gradlew clean build --refresh-dependencies")
                 }
             }
         }
