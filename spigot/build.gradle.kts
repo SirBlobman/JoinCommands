@@ -11,8 +11,6 @@ dependencies {
 }
 
 tasks {
-
-
     processResources {
         val calculatedVersion = rootProject.ext.get("calculatedVersion") as String
         val pluginName = (findProperty("plugin.name") ?: "") as String

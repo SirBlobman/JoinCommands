@@ -21,15 +21,11 @@ allprojects {
 
     repositories {
         mavenCentral()
-
-        maven {
-            name = "sirblobman-public"
-            url = uri("https://nexus.sirblobman.xyz/repository/public/")
-        }
+        maven("https://nexus.sirblobman.xyz/public/")
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:24.0.0")
+        compileOnly("org.jetbrains:annotations:24.0.1")
     }
 
     tasks {
