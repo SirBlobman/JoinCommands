@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import xyz.sirblobman.joincommands.common.utility.Validate;
 import xyz.sirblobman.joincommands.velocity.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.velocity.configuration.PlayerDataConfiguration;
@@ -31,11 +33,11 @@ import com.velocitypowered.api.scheduler.Scheduler.TaskBuilder;
 public final class ListenerJoinCommands {
     private final JoinCommandsPlugin plugin;
 
-    public ListenerJoinCommands(JoinCommandsPlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+    public ListenerJoinCommands(@NotNull JoinCommandsPlugin plugin) {
+        this.plugin = plugin;
     }
 
-    private JoinCommandsPlugin getPlugin() {
+    private @NotNull JoinCommandsPlugin getPlugin() {
         return this.plugin;
     }
 
@@ -85,7 +87,7 @@ public final class ListenerJoinCommands {
             commandManager.executeAsync(player, command);
         } catch (IOException ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while parsing a jc:player command:", ex);
+            logger.log(Level.WARNING, "Failed to parse a command from channel 'jc:player':", ex);
         }
     }
 
@@ -104,11 +106,11 @@ public final class ListenerJoinCommands {
             commandManager.executeAsync(console, command);
         } catch (IOException ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while parsing a jc:console command:", ex);
+            logger.log(Level.WARNING, "Failed to parse a command from channel 'jc:console':", ex);
         }
     }
 
-    private void runProxyJoinCommands(Player player) {
+    private void runProxyJoinCommands(@NotNull Player player) {
         JoinCommandsPlugin plugin = getPlugin();
         VelocityConfiguration configuration = plugin.getConfiguration();
         List<ProxyJoinCommand> commandList = configuration.getProxyJoinCommandList();
@@ -117,12 +119,12 @@ public final class ListenerJoinCommands {
         Scheduler scheduler = proxy.getScheduler();
 
         for (ProxyJoinCommand command : commandList) {
-            if (!command.shouldBeExecutedFor(plugin, player)) {
+            if (!command.canExecute(plugin, player)) {
                 continue;
             }
 
             long delay = command.getDelay();
-            Runnable task = () -> command.executeFor(plugin, player);
+            Runnable task = () -> command.execute(plugin, player);
             TaskBuilder taskBuilder = scheduler.buildTask(plugin, task);
 
             Duration duration = Duration.of(delay, ChronoUnit.SECONDS);
@@ -131,7 +133,7 @@ public final class ListenerJoinCommands {
         }
     }
 
-    private void setJoinedProxyBefore(Player player) {
+    private void setJoinedProxyBefore(@NotNull Player player) {
         JoinCommandsPlugin plugin = getPlugin();
         VelocityConfiguration configuration = plugin.getConfiguration();
         if (configuration.isDisablePlayerData()) {

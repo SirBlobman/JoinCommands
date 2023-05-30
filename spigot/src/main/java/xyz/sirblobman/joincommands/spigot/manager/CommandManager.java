@@ -7,6 +7,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,21 +22,21 @@ public final class CommandManager {
     private final List<ServerJoinCommand> serverJoinCommandList;
     private final List<WorldJoinCommand> worldJoinCommandList;
 
-    public CommandManager(JoinCommandsPlugin plugin) {
+    public CommandManager(@NotNull JoinCommandsPlugin plugin) {
         this.plugin = plugin;
         this.serverJoinCommandList = new ArrayList<>();
         this.worldJoinCommandList = new ArrayList<>();
     }
 
-    public JoinCommandsPlugin getPlugin() {
+    public @NotNull JoinCommandsPlugin getPlugin() {
         return this.plugin;
     }
 
-    public List<ServerJoinCommand> getJoinCommandList() {
+    public @NotNull List<ServerJoinCommand> getJoinCommandList() {
         return Collections.unmodifiableList(this.serverJoinCommandList);
     }
 
-    public List<WorldJoinCommand> getWorldJoinCommandList() {
+    public @NotNull List<WorldJoinCommand> getWorldJoinCommandList() {
         return Collections.unmodifiableList(this.worldJoinCommandList);
     }
 
@@ -75,11 +78,7 @@ public final class CommandManager {
         }
     }
 
-    private ServerJoinCommand loadServerJoinCommand(ConfigurationSection section) {
-        if (section == null) {
-            return null;
-        }
-
+    private @Nullable ServerJoinCommand loadServerJoinCommand(@NotNull ConfigurationSection section) {
         String commandId = section.getName();
         List<String> commandList = section.getStringList("command-list");
         String permission = section.getString("permission");
@@ -134,11 +133,7 @@ public final class CommandManager {
         }
     }
 
-    private WorldJoinCommand loadWorldJoinCommand(ConfigurationSection section) {
-        if (section == null) {
-            return null;
-        }
-
+    private @Nullable WorldJoinCommand loadWorldJoinCommand(@NotNull ConfigurationSection section) {
         String commandId = section.getName();
         List<String> commandList = section.getStringList("command-list");
         List<String> worldList = section.getStringList("world-list");

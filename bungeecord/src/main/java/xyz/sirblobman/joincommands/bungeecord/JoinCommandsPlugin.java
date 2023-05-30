@@ -9,6 +9,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -39,11 +41,11 @@ public final class JoinCommandsPlugin extends Plugin {
         registerListener();
     }
 
-    public CommandManager getCommandManager() {
+    public @NotNull CommandManager getCommandManager() {
         return this.commandManager;
     }
 
-    public Configuration getConfig() {
+    public @NotNull Configuration getConfig() {
         if (this.config == null) {
             loadConfig();
         }

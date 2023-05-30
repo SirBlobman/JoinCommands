@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import xyz.sirblobman.joincommands.common.utility.Validate;
 import xyz.sirblobman.joincommands.velocity.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.velocity.configuration.PlayerDataConfiguration;
@@ -15,7 +17,6 @@ import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.util.GameProfile;
-import org.jetbrains.annotations.NotNull;
 
 public final class ProxyJoinCommand {
     private final List<String> commandList;
@@ -23,21 +24,20 @@ public final class ProxyJoinCommand {
     private final boolean firstJoinOnly;
     private final long delay;
 
-    public ProxyJoinCommand(List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
+    public ProxyJoinCommand(@NotNull List<String> commandList, @NotNull String permission, boolean firstJoinOnly,
+                            long delay) {
         this.commandList = Validate.notEmpty(commandList, "commandList must not be empty!");
-        this.permission = Validate.notNull(permission, "permission must not be null!");
+        this.permission = permission;
 
         this.firstJoinOnly = firstJoinOnly;
         this.delay = delay;
     }
 
-    @NotNull
-    public List<String> getCommands() {
+    public @NotNull List<String> getCommands() {
         return Collections.unmodifiableList(this.commandList);
     }
 
-    @NotNull
-    public String getPermission() {
+    public @NotNull String getPermission() {
         return this.permission;
     }
 
@@ -49,11 +49,8 @@ public final class ProxyJoinCommand {
         return this.delay;
     }
 
-    public boolean shouldBeExecutedFor(JoinCommandsPlugin plugin, Player player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
-        if(isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
+    public boolean canExecute(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
+        if (isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
             return false;
         }
 
@@ -65,16 +62,14 @@ public final class ProxyJoinCommand {
         return true;
     }
 
-    public void executeFor(JoinCommandsPlugin plugin, Player player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
+    public void execute(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
         GameProfile gameProfile = player.getGameProfile();
         String playerName = gameProfile.getName();
         List<String> commandList = getCommands();
+
         for (String originalCommand : commandList) {
             String replacedCommand = originalCommand.replace("{player}", playerName);
-            if(replacedCommand.startsWith("[PLAYER]")) {
+            if (replacedCommand.startsWith("[PLAYER]")) {
                 String playerCommand = replacedCommand.substring(8);
                 runAsPlayer(plugin, player, playerCommand);
             } else {
@@ -83,9 +78,9 @@ public final class ProxyJoinCommand {
         }
     }
 
-    private boolean hasJoinedBefore(JoinCommandsPlugin plugin, Player player) {
+    private boolean hasJoinedBefore(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
         VelocityConfiguration configuration = plugin.getConfiguration();
-        if(configuration.isDisablePlayerData()) {
+        if (configuration.isDisablePlayerData()) {
             return false;
         }
 
@@ -93,32 +88,25 @@ public final class ProxyJoinCommand {
         return playerData.hasPlayerJoinedBefore(player);
     }
 
-    private void runAsPlayer(JoinCommandsPlugin plugin, Player player, String command) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsPlayer(@NotNull JoinCommandsPlugin plugin, @NotNull Player player, @NotNull String command) {
         try {
             ProxyServer proxy = plugin.getServer();
             CommandManager commandManager = proxy.getCommandManager();
             commandManager.executeAsync(player, command);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Logger logger = plugin.getLogger();
             String errorMessage = "An error occurred while executing command '/" + command + "' as a player:";
             logger.log(Level.WARNING, errorMessage, ex);
         }
     }
 
-    private void runAsConsole(JoinCommandsPlugin plugin, String command) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsConsole(@NotNull JoinCommandsPlugin plugin, @NotNull String command) {
         try {
             ProxyServer proxy = plugin.getServer();
             CommandManager commandManager = proxy.getCommandManager();
             ConsoleCommandSource console = proxy.getConsoleCommandSource();
             commandManager.executeAsync(console, command);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Logger logger = plugin.getLogger();
             String errorMessage = "An error occurred while executing command '/" + command + "' in console:";
             logger.log(Level.WARNING, errorMessage, ex);

@@ -1,14 +1,40 @@
-val jenkinsBuildNumber = System.getenv("BUILD_NUMBER") ?: "Unknown"
-val baseVersion = findProperty("version.base") as String
-val betaVersionString = (findProperty("version.beta") ?: "false") as String
-val betaVersion = betaVersionString.toBoolean()
-val betaVersionPart = if (betaVersion) "Beta-" else ""
+val baseVersion = fetchProperty("version.base", "invalid")
+val betaString = fetchProperty("version.beta", "false")
+val jenkinsBuildNumber = fetchEnv("BUILD_NUMBER", null, "Unofficial")
 
-val calculatedVersion = "$baseVersion.$betaVersionPart$jenkinsBuildNumber"
+val betaBoolean = betaString.toBoolean()
+val betaVersion = if (betaBoolean) "Beta-" else ""
+val calculatedVersion = "$baseVersion.$betaVersion$jenkinsBuildNumber"
 rootProject.ext.set("calculatedVersion", calculatedVersion)
+
+fun fetchProperty(propertyName: String, defaultValue: String): String {
+    val found = findProperty(propertyName)
+    if (found != null) {
+        return found.toString()
+    }
+
+    return defaultValue
+}
+
+fun fetchEnv(envName: String, propertyName: String?, defaultValue: String): String {
+    val found = System.getenv(envName)
+    if (found != null) {
+        return found
+    }
+
+    if (propertyName != null) {
+        return fetchProperty(propertyName, defaultValue)
+    }
+
+    return defaultValue
+}
 
 plugins {
     id("java")
+}
+
+tasks.named("jar") {
+    enabled = false
 }
 
 allprojects {
@@ -31,6 +57,14 @@ allprojects {
     tasks {
         withType<JavaCompile> {
             options.encoding = "UTF-8"
+            options.compilerArgs.add("-Xlint:deprecation")
+            options.compilerArgs.add("-Xlint:unchecked")
+        }
+
+        withType<Javadoc> {
+            options.encoding = "UTF-8"
+            val standardOptions = options as StandardJavadocDocletOptions
+            standardOptions.addStringOption("Xdoclint:none", "-quiet")
         }
     }
 }

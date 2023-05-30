@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,8 +25,6 @@ import xyz.sirblobman.joincommands.spigot.manager.PlayerDataManager;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class ServerJoinCommand {
     private final List<String> commandList;
@@ -33,7 +34,8 @@ public final class ServerJoinCommand {
 
     private transient Permission permission;
 
-    public ServerJoinCommand(List<String> commandList, String permissionName, boolean firstJoinOnly, long delay) {
+    public ServerJoinCommand(@NotNull List<String> commandList, @NotNull String permissionName, boolean firstJoinOnly,
+                             long delay) {
         Validate.notEmpty(commandList, "commandList must not be empty or null.");
 
         this.commandList = commandList;
@@ -42,13 +44,11 @@ public final class ServerJoinCommand {
         this.delay = delay;
     }
 
-    @NotNull
-    public List<String> getCommands() {
+    public @NotNull List<String> getCommands() {
         return Collections.unmodifiableList(this.commandList);
     }
 
-    @Nullable
-    public String getPermissionName() {
+    public @Nullable String getPermissionName() {
         return this.permissionName;
     }
 
@@ -60,25 +60,23 @@ public final class ServerJoinCommand {
         return this.delay;
     }
 
-    public Permission getPermission() {
+    public @Nullable Permission getPermission() {
+        if (this.permission != null) {
+            return this.permission;
+        }
+
         if (this.permissionName == null || this.permissionName.isEmpty()) {
             return null;
         }
 
-        if (this.permission == null) {
-            String permissionName = getPermissionName();
-            String permissionDescription = "A permission that allows a specific join command to be executed.";
-            this.permission = new Permission(permissionName, permissionDescription, PermissionDefault.FALSE);
-        }
-
+        String permissionName = getPermissionName();
+        String permissionDescription = "A permission that allows a specific join command to be executed.";
+        this.permission = new Permission(permissionName, permissionDescription, PermissionDefault.FALSE);
         return this.permission;
     }
 
-    public boolean shouldBeExecutedFor(JoinCommandsPlugin plugin, Player player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
-        if(isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
+    public boolean canExecute(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
+        if (isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
             return false;
         }
 
@@ -90,43 +88,37 @@ public final class ServerJoinCommand {
         return true;
     }
 
-    public void executeFor(JoinCommandsPlugin plugin, Player player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
+    public void execute(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
         String playerName = player.getName();
         List<String> commandList = getCommands();
 
-        for (String originalCommand : commandList) {
-            String replacedCommand = originalCommand.replace("{player}", playerName);
-            if(plugin.usePlaceholderAPIHook()) {
-                replacedCommand = PlaceholderAPI.setPlaceholders(player, replacedCommand);
+        for (String command : commandList) {
+            String replaced = command.replace("{player}", playerName);
+            if (plugin.usePlaceholderAPIHook()) {
+                replaced = PlaceholderAPI.setPlaceholders(player, replaced);
             }
 
-            if(replacedCommand.startsWith("[PLAYER]")) {
-                String playerCommand = replacedCommand.substring(8);
+            if (replaced.startsWith("[PLAYER]")) {
+                String playerCommand = replaced.substring(8);
                 runAsPlayer(player, playerCommand);
-            } else if(replacedCommand.startsWith("[OP]")) {
-                String opCommand = replacedCommand.substring(4);
+            } else if (replaced.startsWith("[OP]")) {
+                String opCommand = replaced.substring(4);
                 runAsOp(player, opCommand);
-            } else if(replacedCommand.startsWith("[BPLAYER]")) {
-                String bplayerCommand = replacedCommand.substring(9);
-                runAsBungeePlayer(plugin, player, bplayerCommand);
-            } else if(replacedCommand.startsWith("[BCONSOLE]")) {
-                String bconsoleCommand = replacedCommand.substring(10);
-                runAsBungeeConsole(plugin, player, bconsoleCommand);
+            } else if (replaced.startsWith("[BPLAYER]")) {
+                String proxyPlayerCommand = replaced.substring(9);
+                runAsProxyPlayer(plugin, player, proxyPlayerCommand);
+            } else if (replaced.startsWith("[BCONSOLE]")) {
+                String proxyConsoleCommand = replaced.substring(10);
+                runAsProxyConsole(plugin, player, proxyConsoleCommand);
             } else {
-                runAsConsole(replacedCommand);
+                runAsConsole(replaced);
             }
         }
     }
 
-    private boolean hasJoinedBefore(JoinCommandsPlugin plugin, Player player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
+    private boolean hasJoinedBefore(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
         FileConfiguration configuration = plugin.getConfig();
-        if(configuration.getBoolean("disable-player-data", false)) {
+        if (configuration.getBoolean("disable-player-data", false)) {
             return false;
         }
 
@@ -135,13 +127,11 @@ public final class ServerJoinCommand {
         return playerData.getBoolean("join-commands.played-before", false);
     }
 
-    private void runAsPlayer(Player player, String command) {
-        Validate.notNull(player, "player must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsPlayer(@NotNull Player player, @NotNull String command) {
         PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, "/" + command);
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.callEvent(event);
+
         if (event.isCancelled()) {
             return;
         }
@@ -150,15 +140,12 @@ public final class ServerJoinCommand {
             String eventMessage = event.getMessage();
             String actualCommand = eventMessage.substring(1);
             player.performCommand(actualCommand);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void runAsOp(Player player, String command) {
-        Validate.notNull(player, "player must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsOp(@NotNull Player player, @NotNull String command) {
         if (player.isOp()) {
             runAsPlayer(player, command);
             return;
@@ -167,30 +154,24 @@ public final class ServerJoinCommand {
         try {
             player.setOp(true);
             runAsPlayer(player, command);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
             player.setOp(false);
         }
     }
 
-    private void runAsConsole(String command) {
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsConsole(@NotNull String command) {
         try {
             ConsoleCommandSender console = Bukkit.getConsoleSender();
             Bukkit.dispatchCommand(console, command);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    private void runAsBungeePlayer(JoinCommandsPlugin plugin, Player player, String command) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsProxyPlayer(@NotNull JoinCommandsPlugin plugin, @NotNull Player player, @NotNull String command) {
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
             dataOutput.writeUTF(command);
@@ -199,17 +180,14 @@ public final class ServerJoinCommand {
             player.sendPluginMessage(plugin, "jc:player", message);
         } catch (Exception ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:player'. " +
-                    "Is the BungeeCord proxy online?", ex);
+            String messageFormat = "Failed to send a message on proxy channel 'jc:player':";
+            logger.log(Level.WARNING, messageFormat, ex);
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    private void runAsBungeeConsole(JoinCommandsPlugin plugin, Player player, String command) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsProxyConsole(@NotNull JoinCommandsPlugin plugin, @NotNull Player player,
+                                   @NotNull String command) {
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
             dataOutput.writeUTF(command);
@@ -218,8 +196,8 @@ public final class ServerJoinCommand {
             player.sendPluginMessage(plugin, "jc:console", message);
         } catch (Exception ex) {
             Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while sending a message on channel 'jc:console'. " +
-                    "Is the BungeeCord proxy online?", ex);
+            String messageFormat = "Failed to send a message on proxy channel 'jc:console':";
+            logger.log(Level.WARNING, messageFormat, ex);
         }
     }
 }

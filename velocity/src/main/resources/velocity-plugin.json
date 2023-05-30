@@ -1,10 +1,12 @@
 {
-  "id": "${plugin.id}",
-  "name": "${plugin.prefix}",
-  "version": "${plugin.version}",
-  "description": "${plugin.description}",
-  "url": "${plugin.website}",
-  "main": "${plugin.main}",
-  "authors": ["SirBlobman"],
+  "id": "${pluginId}",
+  "name": "${pluginPrefix}",
+  "version": "${pluginVersion}",
+  "description": "${pluginDescription}",
+  "url": "${pluginWebsite}",
+  "main": "${pluginMain}",
+  "authors": [
+    "SirBlobman"
+  ],
   "dependencies": []
 }

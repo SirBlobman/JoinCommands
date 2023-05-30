@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.Connection;
@@ -25,12 +27,11 @@ import net.md_5.bungee.event.EventPriority;
 import xyz.sirblobman.joincommands.bungeecord.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.bungeecord.manager.CommandManager;
 import xyz.sirblobman.joincommands.bungeecord.object.ProxyJoinCommand;
-import xyz.sirblobman.joincommands.common.utility.Validate;
 
 public final class ListenerJoinCommands implements Listener {
     private final JoinCommandsPlugin plugin;
 
-    public ListenerJoinCommands(JoinCommandsPlugin plugin) {
+    public ListenerJoinCommands(@NotNull JoinCommandsPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -64,50 +65,53 @@ public final class ListenerJoinCommands implements Listener {
         setJoinedProxyBefore(player);
     }
 
-    private JoinCommandsPlugin getPlugin() {
+    private @NotNull JoinCommandsPlugin getPlugin() {
         return this.plugin;
     }
 
-    private void runPlayerCommand(ProxiedPlayer player, byte[] data) {
-        Validate.notNull(player, "player must not be null!");
-        Validate.notNull(data, "data must not be null!");
+    private @NotNull Logger getLogger() {
         JoinCommandsPlugin plugin = getPlugin();
+        return plugin.getLogger();
+    }
 
+    private @NotNull ProxyServer getProxy() {
+        JoinCommandsPlugin plugin = getPlugin();
+        return plugin.getProxy();
+    }
+
+    private void runPlayerCommand(@NotNull ProxiedPlayer player, byte @NotNull [] data) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             DataInputStream dataStream = new DataInputStream(inputStream);
             String command = dataStream.readUTF();
 
-            ProxyServer proxy = plugin.getProxy();
+            ProxyServer proxy = getProxy();
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(player, command);
         } catch (IOException ex) {
-            Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while parsing a jc:player command:", ex);
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to parse a command from channel 'jc:player':", ex);
         }
     }
 
-    private void runConsoleCommand(byte[] data) {
-        Validate.notNull(data, "data must not be null!");
-        JoinCommandsPlugin plugin = getPlugin();
-
+    private void runConsoleCommand(byte @NotNull [] data) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             DataInputStream dataStream = new DataInputStream(inputStream);
             String command = dataStream.readUTF();
 
-            ProxyServer proxy = plugin.getProxy();
+            ProxyServer proxy = getProxy();
             CommandSender console = proxy.getConsole();
 
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(console, command);
         } catch (IOException ex) {
-            Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while parsing a jc:player command:", ex);
+            Logger logger = getLogger();
+            logger.log(Level.WARNING, "Failed to parse a command from channel 'jc:console':", ex);
         }
     }
 
-    private void runProxyJoinCommands(ProxiedPlayer player) {
+    private void runProxyJoinCommands(@NotNull ProxiedPlayer player) {
         JoinCommandsPlugin plugin = getPlugin();
         CommandManager commandManager = plugin.getCommandManager();
         List<ProxyJoinCommand> commandList = commandManager.getProxyJoinCommandList();
@@ -116,20 +120,20 @@ public final class ListenerJoinCommands implements Listener {
         TaskScheduler scheduler = proxy.getScheduler();
 
         for (ProxyJoinCommand command : commandList) {
-            if (!command.shouldBeExecutedFor(plugin, player)) {
+            if (!command.canExecute(plugin, player)) {
                 continue;
             }
 
             long delay = command.getDelay();
-            Runnable task = () -> command.executeFor(plugin, player);
+            Runnable task = () -> command.execute(plugin, player);
             scheduler.schedule(plugin, task, delay, TimeUnit.SECONDS);
         }
     }
 
-    private void setJoinedProxyBefore(ProxiedPlayer player) {
+    private void setJoinedProxyBefore(@NotNull ProxiedPlayer player) {
         JoinCommandsPlugin plugin = getPlugin();
         Configuration configuration = plugin.getConfig();
-        if(configuration.getBoolean("disable-player-data", false)) {
+        if (configuration.getBoolean("disable-player-data", false)) {
             return;
         }
 

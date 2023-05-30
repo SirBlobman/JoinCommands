@@ -3,6 +3,8 @@ package xyz.sirblobman.joincommands.spigot.command;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,7 +16,7 @@ import xyz.sirblobman.joincommands.spigot.JoinCommandsPlugin;
 public final class CommandJoinCommands implements TabExecutor {
     private final JoinCommandsPlugin plugin;
 
-    public CommandJoinCommands(JoinCommandsPlugin plugin) {
+    public CommandJoinCommands(@NotNull JoinCommandsPlugin plugin) {
         this.plugin = plugin;
     }
 

@@ -38,7 +38,7 @@ public final class ListenerJoinCommands implements Listener {
         sendDebug("Player Name: " + player.getName());
 
         sendDebug("Running server join commands for player...");
-        runServerJoinComands(player);
+        runServerJoinCommands(player);
         sendDebug("Finished running server join commands.");
 
         sendDebug("Setting player as previously joined if not already set.");
@@ -84,7 +84,7 @@ public final class ListenerJoinCommands implements Listener {
         return plugin.getConfig();
     }
 
-    private void runServerJoinComands(Player player) {
+    private void runServerJoinCommands(Player player) {
         if (player == null) {
             return;
         }
@@ -94,12 +94,12 @@ public final class ListenerJoinCommands implements Listener {
         List<ServerJoinCommand> commandList = commandManager.getJoinCommandList();
 
         for (ServerJoinCommand command : commandList) {
-            if (!command.shouldBeExecutedFor(this.plugin, player)) {
+            if (!command.canExecute(this.plugin, player)) {
                 continue;
             }
 
             long delay = command.getDelay();
-            Runnable task = () -> command.executeFor(this.plugin, player);
+            Runnable task = () -> command.execute(this.plugin, player);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
@@ -114,12 +114,12 @@ public final class ListenerJoinCommands implements Listener {
         List<WorldJoinCommand> commandList = commandManager.getWorldJoinCommandList();
 
         for (WorldJoinCommand command : commandList) {
-            if (!command.shouldBeExecutedFor(this.plugin, player, world)) {
+            if (!command.canExecute(this.plugin, player, world)) {
                 continue;
             }
 
             long delay = command.getDelay();
-            Runnable task = () -> command.executeFor(this.plugin, player, world);
+            Runnable task = () -> command.execute(this.plugin, player, world);
             scheduler.scheduleSyncDelayedTask(this.plugin, task, delay);
         }
     }
@@ -128,7 +128,7 @@ public final class ListenerJoinCommands implements Listener {
         Validate.notNull(player, "player must not be null!");
 
         FileConfiguration configuration = getConfiguration();
-        if(configuration.getBoolean("disable-player-data", false)) {
+        if (configuration.getBoolean("disable-player-data", false)) {
             return;
         }
 
@@ -148,7 +148,7 @@ public final class ListenerJoinCommands implements Listener {
         Validate.notNull(world, "world must not be null!");
 
         FileConfiguration configuration = getConfiguration();
-        if(configuration.getBoolean("disable-player-data", false)) {
+        if (configuration.getBoolean("disable-player-data", false)) {
             return;
         }
 

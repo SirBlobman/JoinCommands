@@ -1,18 +1,25 @@
-# Default Configuration for Join Commands (BungeeCord Version)
+## Default Configuration for Join Commands
+## BungeeCord Version
 
-# Set this to true if you are trying to resolve an issue or SirBlobman asks you to.
-# This will send extra output to console about the plugin.
+# Debug Mode.
+# Should be false unless you are testing a bug.
+# Default: false
 debug-mode: false
 
 # Set this to true to disable player data files.
 # Using this option will cause problems with the 'first-join-only' options.
+# Default: false
 disable-player-data: false
 
-# A command ID can be any valid YML section string, but they must all be different
 # To disable all proxy join commands, set the value to 'proxy-join-commands: {}'
 proxy-join-commands:
+  # A command ID can be any valid YML section string, but they must all be different
+  # The ID for this command is 'exampleOneProxy'.
+  # Command IDs are only used internally at this time and server no other purpose.
   exampleOneProxy:
+    # This command will only run if the player has the 'always.survival' permission.
     permission: "always.survival"
+
     first-join-only: false
 
     # Delay for proxy is in seconds.
@@ -28,8 +35,8 @@ proxy-join-commands:
       - "[PLAYER]server survival"
 
   exampleProxy2:
-    permission: ""
-    first-join-only: true
+    permission: "" # Use an empty string to disable the permission check.
+    first-join-only: true # This command will only run the first time that JoinCommands sees this player.
     delay: 20
     command-list:
       - "send {player} lobby"

@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import net.md_5.bungee.config.Configuration;
 
@@ -16,16 +20,22 @@ public final class CommandManager {
     private final JoinCommandsPlugin plugin;
     private final List<ProxyJoinCommand> proxyJoinCommandList;
 
-    public CommandManager(JoinCommandsPlugin plugin) {
+    public CommandManager(@NotNull JoinCommandsPlugin plugin) {
         this.plugin = plugin;
         this.proxyJoinCommandList = new ArrayList<>();
     }
 
-    public JoinCommandsPlugin getPlugin() {
+    private @NotNull JoinCommandsPlugin getPlugin() {
         return this.plugin;
     }
 
-    public List<ProxyJoinCommand> getProxyJoinCommandList() {
+    private @NotNull Logger getLogger() {
+        JoinCommandsPlugin plugin = getPlugin();
+        return plugin.getLogger();
+    }
+
+
+    public @NotNull List<ProxyJoinCommand> getProxyJoinCommandList() {
         return Collections.unmodifiableList(this.proxyJoinCommandList);
     }
 
@@ -34,10 +44,6 @@ public final class CommandManager {
 
         JoinCommandsPlugin plugin = getPlugin();
         Configuration configuration = plugin.getConfig();
-        if (configuration == null) {
-            return;
-        }
-
         Configuration section = configuration.getSection("proxy-join-commands");
         if (section == null) {
             return;
@@ -63,11 +69,7 @@ public final class CommandManager {
         }
     }
 
-    private ProxyJoinCommand loadProxyJoinCommand(String commandId, Configuration section) {
-        if (section == null) {
-            return null;
-        }
-
+    private @Nullable ProxyJoinCommand loadProxyJoinCommand(@NotNull String commandId, @NotNull Configuration section) {
         List<String> commandList = section.getStringList("command-list");
         String permission = section.getString("permission");
         boolean firstJoinOnly = section.getBoolean("first-join-only");
@@ -76,10 +78,9 @@ public final class CommandManager {
         try {
             return new ProxyJoinCommand(commandList, permission, firstJoinOnly, delay);
         } catch (Exception ex) {
-            JoinCommandsPlugin plugin = getPlugin();
-            Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "An error occurred while loading the proxy join command with id '"
-                    + commandId + "':", ex);
+            Logger logger = getLogger();
+            String messageFormat = "Failed to load a proxy join command with id '%s':";
+            logger.log(Level.WARNING, String.format(Locale.US, messageFormat, commandId), ex);
             return null;
         }
     }

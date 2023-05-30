@@ -10,7 +10,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import xyz.sirblobman.joincommands.common.utility.Validate;
+import org.jetbrains.annotations.NotNull;
+
 import xyz.sirblobman.joincommands.velocity.JoinCommandsPlugin;
 
 import com.google.common.reflect.TypeToken;
@@ -24,14 +25,11 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 public final class PlayerDataConfiguration {
     private final JoinCommandsPlugin plugin;
     private final YAMLConfigurationLoader configurationLoader;
-
+    private final Set<UUID> joinedBeforeSet;
     private ConfigurationNode configuration;
 
-    private final Set<UUID> joinedBeforeSet;
-
-    public PlayerDataConfiguration(JoinCommandsPlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
-
+    public PlayerDataConfiguration(@NotNull JoinCommandsPlugin plugin) {
+        this.plugin = plugin;
         Path dataDirectory = plugin.getDataDirectory();
         Path configPath = dataDirectory.resolve("playerdata.yml");
 
@@ -55,7 +53,7 @@ public final class PlayerDataConfiguration {
 
             this.joinedBeforeSet.clear();
             this.joinedBeforeSet.addAll(copyList);
-        } catch(IOException | ObjectMappingException ex) {
+        } catch (IOException | ObjectMappingException ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.SEVERE, "Failed to load the player data configuration:", ex);
         }
@@ -68,18 +66,18 @@ public final class PlayerDataConfiguration {
             node.setValue(copyList);
 
             this.configurationLoader.save(this.configuration);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.SEVERE, "Failed to save the player data configuration:", ex);
         }
     }
 
-    public boolean hasPlayerJoinedBefore(Player player) {
+    public boolean hasPlayerJoinedBefore(@NotNull Player player) {
         UUID playerId = player.getUniqueId();
         return this.joinedBeforeSet.contains(playerId);
     }
 
-    public void setJoined(Player player) {
+    public void setJoined(@NotNull Player player) {
         UUID playerId = player.getUniqueId();
         this.joinedBeforeSet.add(playerId);
         save();

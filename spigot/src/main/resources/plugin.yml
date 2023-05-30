@@ -1,9 +1,9 @@
-name: "${plugin.name}"
-prefix: "${plugin.prefix}"
-description: "${plugin.description}"
+name: "${pluginName}"
+prefix: "${pluginPrefix}"
+description: "${pluginDescription}"
 
-main: "${plugin.main}"
-version: "${plugin.version}"
+main: "${pluginMain}"
+version: "${pluginVersion}"
 api-version: "1.13"
 
 authors:

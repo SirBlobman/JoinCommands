@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import xyz.sirblobman.joincommands.common.utility.Validate;
+import org.jetbrains.annotations.NotNull;
+
 import xyz.sirblobman.joincommands.velocity.object.ProxyJoinCommand;
 
 import com.google.common.reflect.TypeToken;
@@ -15,24 +16,27 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 public final class VelocityConfiguration {
     private final Logger logger;
+    private final List<ProxyJoinCommand> proxyJoinCommandList;
     private boolean debugMode;
     private boolean disablePlayerData;
-    private final List<ProxyJoinCommand> proxyJoinCommandList;
 
-    public VelocityConfiguration(Logger logger) {
-        this.logger = Validate.notNull(logger, "logger must not be null!");
-
+    public VelocityConfiguration(@NotNull Logger logger) {
+        this.logger = logger;
         this.debugMode = false;
         this.disablePlayerData = false;
         this.proxyJoinCommandList = new ArrayList<>();
     }
 
-    public void load(ConfigurationNode configurationNode) {
+    private @NotNull Logger getLogger() {
+        return this.logger;
+    }
+
+    public void load(@NotNull ConfigurationNode configurationNode) {
         ConfigurationNode debugModeNode = configurationNode.getNode("debug-mode");
-        this.debugMode = debugModeNode.getBoolean();
+        setDebugMode(debugModeNode.getBoolean());
 
         ConfigurationNode disablePlayerDataNode = configurationNode.getNode("disable-player-data");
-        this.disablePlayerData = disablePlayerDataNode.getBoolean();
+        setDisablePlayerData(disablePlayerDataNode.getBoolean());
 
         ConfigurationNode proxyJoinCommandsNode = configurationNode.getNode("proxy-join-commands");
         List<? extends ConfigurationNode> proxyJoinCommandNodes = proxyJoinCommandsNode.getChildrenList();
@@ -55,16 +59,12 @@ public final class VelocityConfiguration {
         this.disablePlayerData = disablePlayerData;
     }
 
-    public List<ProxyJoinCommand> getProxyJoinCommandList() {
+    public @NotNull List<ProxyJoinCommand> getProxyJoinCommandList() {
         return Collections.unmodifiableList(this.proxyJoinCommandList);
     }
 
-    private Logger getLogger() {
-        return this.logger;
-    }
-
     @SuppressWarnings("UnstableApiUsage")
-    private void loadProxyJoinCommands(List<? extends ConfigurationNode> nodes) {
+    private void loadProxyJoinCommands(@NotNull List<? extends ConfigurationNode> nodes) {
         this.proxyJoinCommandList.clear();
 
         for (ConfigurationNode node : nodes) {
@@ -81,9 +81,9 @@ public final class VelocityConfiguration {
             try {
                 TypeToken<String> stringToken = TypeToken.of(String.class);
                 commandList = commandListNode.getList(stringToken);
-            } catch(ObjectMappingException ex) {
+            } catch (ObjectMappingException ex) {
                 Logger logger = getLogger();
-                logger.log(Level.WARNING,"Failed to load command list from node '" + node.getKey() + "':", ex);
+                logger.log(Level.WARNING, "Failed to load command list from node '" + node.getKey() + "':", ex);
                 commandList = new ArrayList<>();
             }
 

@@ -8,19 +8,19 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import xyz.sirblobman.joincommands.common.utility.Validate;
-
 public final class PlayerDataManager {
     private final JavaPlugin plugin;
     private final Map<UUID, YamlConfiguration> configurationMap;
 
-    public PlayerDataManager(JavaPlugin plugin) {
-        this.plugin = Validate.notNull(plugin, "plugin must not be null!");
+    public PlayerDataManager(@NotNull JavaPlugin plugin) {
+        this.plugin = plugin;
         this.configurationMap = new HashMap<>();
     }
 
@@ -31,7 +31,7 @@ public final class PlayerDataManager {
      * @param player The player who owns the configuration
      * @return A configuration from memory. If the configuration is not in memory it will be loaded from a file.
      */
-    public YamlConfiguration get(OfflinePlayer player) {
+    public @NotNull YamlConfiguration get(@NotNull OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         YamlConfiguration configuration = this.configurationMap.getOrDefault(playerId, null);
         if (configuration != null) {
@@ -47,7 +47,7 @@ public final class PlayerDataManager {
      *
      * @param player The player who owns the configuration
      */
-    public void save(OfflinePlayer player) {
+    public void save(@NotNull OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         YamlConfiguration configuration = this.configurationMap.getOrDefault(playerId, null);
         if (configuration == null) {
@@ -69,7 +69,7 @@ public final class PlayerDataManager {
      *
      * @param player The player who owns the configuration
      */
-    public void reload(OfflinePlayer player) {
+    public void reload(@NotNull OfflinePlayer player) {
         UUID playerId = player.getUniqueId();
         try {
             YamlConfiguration configuration = load(player);
@@ -88,12 +88,12 @@ public final class PlayerDataManager {
      * @return {@code true} if the data file exists, otherwise {@code false}.
      * @see File#exists()
      */
-    public boolean hasData(OfflinePlayer player) {
+    public boolean hasData(@NotNull OfflinePlayer player) {
         File playerFile = getFile(player);
         return playerFile.exists();
     }
 
-    private File getFile(OfflinePlayer player) {
+    private @NotNull File getFile(@NotNull OfflinePlayer player) {
         File dataFolder = this.plugin.getDataFolder();
         File playerDataFolder = new File(dataFolder, "playerdata");
 
@@ -103,7 +103,8 @@ public final class PlayerDataManager {
         return new File(playerDataFolder, fileName);
     }
 
-    private YamlConfiguration load(OfflinePlayer player) throws IOException, InvalidConfigurationException {
+    private @NotNull YamlConfiguration load(@NotNull OfflinePlayer player) throws IOException,
+            InvalidConfigurationException {
         File playerFile = getFile(player);
         if (!playerFile.exists()) {
             return new YamlConfiguration();

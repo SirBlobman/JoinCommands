@@ -9,6 +9,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -72,7 +74,7 @@ public final class JoinCommandsPlugin extends JavaPlugin {
 
             Files.copy(jarConfigStream, configFile, StandardCopyOption.REPLACE_EXISTING);
             jarConfigStream.close();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             Logger logger = getLogger();
             logger.log(Level.SEVERE, "An error occurred while saving the default configuration.", ex);
         }
@@ -87,11 +89,11 @@ public final class JoinCommandsPlugin extends JavaPlugin {
         commandManager.loadWorldJoinCommands();
     }
 
-    public PlayerDataManager getPlayerDataManager() {
+    public @NotNull PlayerDataManager getPlayerDataManager() {
         return this.playerDataManager;
     }
 
-    public CommandManager getCommandManager() {
+    public @NotNull CommandManager getCommandManager() {
         return this.commandManager;
     }
 

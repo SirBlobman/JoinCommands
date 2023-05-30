@@ -6,6 +6,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,29 +17,26 @@ import net.md_5.bungee.config.Configuration;
 import xyz.sirblobman.joincommands.bungeecord.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.common.utility.Validate;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class ProxyJoinCommand {
     private final List<String> commandList;
     private final String permission;
     private final boolean firstJoinOnly;
     private final long delay;
 
-    public ProxyJoinCommand(List<String> commandList, String permission, boolean firstJoinOnly, long delay) {
+    public ProxyJoinCommand(@NotNull List<String> commandList, @NotNull String permission, boolean firstJoinOnly,
+                            long delay) {
         this.commandList = Validate.notEmpty(commandList, "commandList must not be empty!");
-        this.permission = Validate.notNull(permission, "permission must not be null!");
+        this.permission = permission;
 
         this.firstJoinOnly = firstJoinOnly;
         this.delay = delay;
     }
 
-    @NotNull
-    public List<String> getCommands() {
+    public @NotNull List<String> getCommands() {
         return Collections.unmodifiableList(this.commandList);
     }
 
-    @NotNull
-    public String getPermission() {
+    public @NotNull String getPermission() {
         return this.permission;
     }
 
@@ -49,11 +48,8 @@ public final class ProxyJoinCommand {
         return this.delay;
     }
 
-    public boolean shouldBeExecutedFor(JoinCommandsPlugin plugin, ProxiedPlayer player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
-        if(isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
+    public boolean canExecute(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player) {
+        if (isFirstJoinOnly() && hasJoinedBefore(plugin, player)) {
             return false;
         }
 
@@ -65,26 +61,23 @@ public final class ProxyJoinCommand {
         return true;
     }
 
-    public void executeFor(JoinCommandsPlugin plugin, ProxiedPlayer player) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-
+    public void execute(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player) {
         String playerName = player.getName();
         List<String> commandList = getCommands();
-        for (String originalCommand : commandList) {
-            String replacedCommand = originalCommand.replace("{player}", playerName);
-            if(replacedCommand.startsWith("[PLAYER]")) {
-                String playerCommand = replacedCommand.substring(8);
+        for (String command : commandList) {
+            String replaced = command.replace("{player}", playerName);
+            if (replaced.startsWith("[PLAYER]")) {
+                String playerCommand = replaced.substring(8);
                 runAsPlayer(plugin, player, playerCommand);
             } else {
-                runAsConsole(plugin, replacedCommand);
+                runAsConsole(plugin, replaced);
             }
         }
     }
 
-    private boolean hasJoinedBefore(JoinCommandsPlugin plugin, ProxiedPlayer player) {
+    private boolean hasJoinedBefore(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player) {
         Configuration configuration = plugin.getConfig();
-        if(configuration.getBoolean("disable-player-data", false)) {
+        if (configuration.getBoolean("disable-player-data", false)) {
             return false;
         }
 
@@ -94,32 +87,26 @@ public final class ProxyJoinCommand {
         return configuration.getBoolean(path, false);
     }
 
-    private void runAsPlayer(JoinCommandsPlugin plugin, ProxiedPlayer player, String command) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notNull(player, "player must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsPlayer(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player,
+                             @NotNull String command) {
         try {
             ProxyServer proxy = plugin.getProxy();
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(player, command);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Logger logger = plugin.getLogger();
             String errorMessage = "An error occurred while executing command '/" + command + "' as a player:";
             logger.log(Level.WARNING, errorMessage, ex);
         }
     }
 
-    private void runAsConsole(JoinCommandsPlugin plugin, String command) {
-        Validate.notNull(plugin, "plugin must not be null!");
-        Validate.notEmpty(command, "command must not be empty!");
-
+    private void runAsConsole(@NotNull JoinCommandsPlugin plugin, @NotNull String command) {
         try {
             ProxyServer proxy = plugin.getProxy();
             CommandSender console = proxy.getConsole();
             PluginManager manager = proxy.getPluginManager();
             manager.dispatchCommand(console, command);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Logger logger = plugin.getLogger();
             String errorMessage = "An error occurred while executing command '/" + command + "' in console:";
             logger.log(Level.WARNING, errorMessage, ex);

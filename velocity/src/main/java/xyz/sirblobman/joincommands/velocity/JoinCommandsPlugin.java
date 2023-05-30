@@ -8,7 +8,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import xyz.sirblobman.joincommands.common.utility.Validate;
+import org.jetbrains.annotations.NotNull;
+
 import xyz.sirblobman.joincommands.velocity.configuration.PlayerDataConfiguration;
 import xyz.sirblobman.joincommands.velocity.configuration.VelocityConfiguration;
 import xyz.sirblobman.joincommands.velocity.listener.ListenerJoinCommands;
@@ -36,10 +37,11 @@ public final class JoinCommandsPlugin {
     private final PlayerDataConfiguration playerData;
 
     @Inject
-    public JoinCommandsPlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
-        this.server = Validate.notNull(server, "server must not be null!");
-        this.logger = Validate.notNull(logger, "logger must not be null!");
-        this.dataDirectory = Validate.notNull(dataDirectory, "dataDirectory must not be null!");
+    public JoinCommandsPlugin(@NotNull ProxyServer server, @NotNull Logger logger,
+                              @DataDirectory @NotNull Path dataDirectory) {
+        this.server = server;
+        this.logger = logger;
+        this.dataDirectory = dataDirectory;
 
         this.configuration = new VelocityConfiguration(this.logger);
         this.playerData = new PlayerDataConfiguration(this);
@@ -61,23 +63,23 @@ public final class JoinCommandsPlugin {
         eventManager.register(this, new ListenerJoinCommands(this));
     }
 
-    public ProxyServer getServer() {
+    public @NotNull ProxyServer getServer() {
         return this.server;
     }
 
-    public Logger getLogger() {
+    public @NotNull Logger getLogger() {
         return this.logger;
     }
 
-    public Path getDataDirectory() {
+    public @NotNull Path getDataDirectory() {
         return this.dataDirectory;
     }
 
-    public VelocityConfiguration getConfiguration() {
+    public @NotNull VelocityConfiguration getConfiguration() {
         return this.configuration;
     }
 
-    public PlayerDataConfiguration getPlayerData() {
+    public @NotNull PlayerDataConfiguration getPlayerData() {
         return this.playerData;
     }
 
@@ -101,7 +103,7 @@ public final class JoinCommandsPlugin {
 
             Files.copy(jarConfigStream, configFile, StandardCopyOption.REPLACE_EXISTING);
             jarConfigStream.close();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             Logger logger = getLogger();
             logger.log(Level.SEVERE, "An error occurred while saving the default configuration.", ex);
         }
@@ -135,7 +137,7 @@ public final class JoinCommandsPlugin {
                 PlayerDataConfiguration playerData = getPlayerData();
                 playerData.load();
             }
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             Logger logger = getLogger();
             logger.log(Level.SEVERE, "An error occurred while reloading the configurations.", ex);
         }
