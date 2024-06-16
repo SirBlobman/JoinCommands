@@ -8,11 +8,11 @@ Join Commands is a plugin for Spigot and BungeeCord that allows you to execute c
 
 ## Supported Software
 
-| Name                                                                                                     | Versions       | Type   |
-|----------------------------------------------------------------------------------------------------------|----------------|--------|
-| [Spigot](https://www.spigotmc.org/) or [Paper](https://papermc.io/downloads/paper)                       | 1.8.8 - 1.19.4 | Server |
-| [BungeeCord](https://ci.md-5.net/job/BungeeCord/) or [Waterfall](https://papermc.io/downloads/waterfall) | 1.19           | Proxy  |
-| [Velocity](https://papermc.io/downloads/velocity)                                                        | 3.1.1          | Proxy  |
+| Name                                                                                                     | Versions     | Type   |
+|----------------------------------------------------------------------------------------------------------|--------------|--------|
+| [Spigot](https://www.spigotmc.org/) or [Paper](https://papermc.io/downloads/paper)                       | 1.8.8 - 1.21 | Server |
+| [BungeeCord](https://ci.md-5.net/job/BungeeCord/) or [Waterfall](https://papermc.io/downloads/waterfall) | 1.21         | Proxy  |
+| [Velocity](https://papermc.io/downloads/velocity)                                                        | 3.1.1        | Proxy  |
 
 ## Installation Instructions
 
