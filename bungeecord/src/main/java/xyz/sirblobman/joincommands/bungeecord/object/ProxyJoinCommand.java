@@ -89,6 +89,10 @@ public final class ProxyJoinCommand {
 
     private void runAsPlayer(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player,
                              @NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         try {
             ProxyServer proxy = plugin.getProxy();
             PluginManager manager = proxy.getPluginManager();
@@ -101,6 +105,10 @@ public final class ProxyJoinCommand {
     }
 
     private void runAsConsole(@NotNull JoinCommandsPlugin plugin, @NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         try {
             ProxyServer proxy = plugin.getProxy();
             CommandSender console = proxy.getConsole();

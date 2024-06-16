@@ -128,6 +128,10 @@ public final class ServerJoinCommand {
     }
 
     private void runAsPlayer(@NotNull Player player, @NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, "/" + command);
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.callEvent(event);
@@ -146,6 +150,10 @@ public final class ServerJoinCommand {
     }
 
     private void runAsOp(@NotNull Player player, @NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         if (player.isOp()) {
             runAsPlayer(player, command);
             return;
@@ -162,6 +170,10 @@ public final class ServerJoinCommand {
     }
 
     private void runAsConsole(@NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         try {
             ConsoleCommandSender console = Bukkit.getConsoleSender();
             Bukkit.dispatchCommand(console, command);
@@ -172,6 +184,10 @@ public final class ServerJoinCommand {
 
     @SuppressWarnings("UnstableApiUsage")
     private void runAsProxyPlayer(@NotNull JoinCommandsPlugin plugin, @NotNull Player player, @NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
             dataOutput.writeUTF(command);
@@ -188,6 +204,10 @@ public final class ServerJoinCommand {
     @SuppressWarnings("UnstableApiUsage")
     private void runAsProxyConsole(@NotNull JoinCommandsPlugin plugin, @NotNull Player player,
                                    @NotNull String command) {
+        if (command.isEmpty()) {
+            return;
+        }
+
         try {
             ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
             dataOutput.writeUTF(command);
