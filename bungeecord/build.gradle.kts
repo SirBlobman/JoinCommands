@@ -9,11 +9,12 @@ fun fetchProperty(propertyName: String, defaultValue: String): String {
 
 repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://libraries.minecraft.net/")
 }
 
 dependencies {
     compileOnly(project(":common"))
-    compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("net.md-5:bungeecord-api:1.21-R0.1-SNAPSHOT")
 }
 
 tasks {

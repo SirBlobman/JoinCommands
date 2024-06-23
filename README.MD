@@ -6,13 +6,17 @@ Join Commands is a plugin for Spigot and BungeeCord that allows you to execute c
 - A player joins the Spigot server.
 - A player joins a world within a Spigot server.
 
+## Requirements
+
+- Java 21
+
 ## Supported Software
 
-| Name                                                                                                     | Versions     | Type   |
-|----------------------------------------------------------------------------------------------------------|--------------|--------|
-| [Spigot](https://www.spigotmc.org/) or [Paper](https://papermc.io/downloads/paper)                       | 1.8.8 - 1.21 | Server |
-| [BungeeCord](https://ci.md-5.net/job/BungeeCord/) or [Waterfall](https://papermc.io/downloads/waterfall) | 1.21         | Proxy  |
-| [Velocity](https://papermc.io/downloads/velocity)                                                        | 3.1.1        | Proxy  |
+| Name                                                                                                     | API Versions       | Type   |
+|----------------------------------------------------------------------------------------------------------|--------------------|--------|
+| [Spigot](https://www.spigotmc.org/) or [Paper](https://papermc.io/downloads/paper)                       | 1.21-R0.1-SNAPSHOT | Server |
+| [BungeeCord](https://ci.md-5.net/job/BungeeCord/) or [Waterfall](https://papermc.io/downloads/waterfall) | 1.21-R0.1-SNAPSHOT | Proxy  |
+| [Velocity](https://papermc.io/downloads/velocity)                                                        | 3.3.0-SNAPSHOT     | Proxy  |
 
 ## Installation Instructions
 
