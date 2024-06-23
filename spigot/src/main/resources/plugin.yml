@@ -4,7 +4,7 @@ description: "${pluginDescription}"
 
 main: "${pluginMain}"
 version: "${pluginVersion}"
-api-version: "1.13"
+api-version: "1.21"
 
 authors:
   - "SirBlobman"
