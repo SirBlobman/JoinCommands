@@ -14,8 +14,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import xyz.sirblobman.joincommands.spigot.JoinCommandsPlugin;
-import xyz.sirblobman.joincommands.spigot.object.ServerJoinCommand;
-import xyz.sirblobman.joincommands.spigot.object.WorldJoinCommand;
+import xyz.sirblobman.joincommands.spigot.command.ServerJoinCommand;
+import xyz.sirblobman.joincommands.spigot.command.WorldJoinCommand;
 
 public final class CommandManager {
     private final JoinCommandsPlugin plugin;
@@ -86,7 +86,12 @@ public final class CommandManager {
         long delay = section.getLong("delay");
 
         try {
-            return new ServerJoinCommand(commandList, permission, firstJoinOnly, delay);
+            ServerJoinCommand command = new ServerJoinCommand(commandId);
+            command.setCommandList(commandList);
+            command.setPermissionName(permission);
+            command.setFirstJoinOnly(firstJoinOnly);
+            command.setDelay(delay);
+            return command;
         } catch (Exception ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while loading the server join command with id '"
@@ -142,7 +147,13 @@ public final class CommandManager {
         long delay = section.getLong("delay");
 
         try {
-            return new WorldJoinCommand(worldList, commandList, permission, firstJoinOnly, delay);
+            WorldJoinCommand command = new WorldJoinCommand(commandId);
+            command.setCommandList(commandList);
+            command.setWorldNameList(worldList);
+            command.setPermissionName(permission);
+            command.setFirstJoinOnly(firstJoinOnly);
+            command.setDelay(delay);
+            return command;
         } catch (Exception ex) {
             Logger logger = this.plugin.getLogger();
             logger.log(Level.WARNING, "An error occurred while loading the world join command with id '"

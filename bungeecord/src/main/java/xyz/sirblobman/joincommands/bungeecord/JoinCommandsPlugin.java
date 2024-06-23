@@ -112,28 +112,32 @@ public final class JoinCommandsPlugin extends Plugin {
 
     private void saveDefaultConfig() {
         try {
-            File pluginFolder = getDataFolder();
-            if (!pluginFolder.exists()) {
-                boolean makeFolder = pluginFolder.mkdirs();
-                if (!makeFolder) {
-                    throw new IOException("Failed to create plugin folder.");
-                }
-            }
-
-            File file = new File(pluginFolder, "config.yml");
-            if (!file.exists()) {
-                boolean createFile = file.createNewFile();
-                if (!createFile) {
-                    throw new IOException("Create file returned false.");
-                }
-            }
-
-            Path path = file.toPath();
+            Path path = getOrCreateConfigurationFile();
             InputStream configStream = getResourceAsStream("config-bungee.yml");
             Files.copy(configStream, path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             Logger logger = getLogger();
             logger.log(Level.WARNING, "An error occurred while creating the default 'config.yml' file:", ex);
         }
+    }
+
+    private @NotNull Path getOrCreateConfigurationFile() throws IOException {
+        File pluginFolder = getDataFolder();
+        if (!pluginFolder.exists()) {
+            boolean makeFolder = pluginFolder.mkdirs();
+            if (!makeFolder) {
+                throw new IOException("Failed to create plugin folder.");
+            }
+        }
+
+        File file = new File(pluginFolder, "config.yml");
+        if (!file.exists()) {
+            boolean createFile = file.createNewFile();
+            if (!createFile) {
+                throw new IOException("Create file returned false.");
+            }
+        }
+
+        return file.toPath();
     }
 }

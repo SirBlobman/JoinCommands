@@ -15,7 +15,7 @@ import xyz.sirblobman.joincommands.common.utility.Validate;
 import xyz.sirblobman.joincommands.velocity.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.velocity.configuration.PlayerDataConfiguration;
 import xyz.sirblobman.joincommands.velocity.configuration.VelocityConfiguration;
-import xyz.sirblobman.joincommands.velocity.object.ProxyJoinCommand;
+import xyz.sirblobman.joincommands.velocity.command.ProxyJoinCommand;
 
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;

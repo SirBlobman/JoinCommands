@@ -26,7 +26,7 @@ import net.md_5.bungee.event.EventPriority;
 
 import xyz.sirblobman.joincommands.bungeecord.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.bungeecord.manager.CommandManager;
-import xyz.sirblobman.joincommands.bungeecord.object.ProxyJoinCommand;
+import xyz.sirblobman.joincommands.bungeecord.command.ProxyJoinCommand;
 
 public final class ListenerJoinCommands implements Listener {
     private final JoinCommandsPlugin plugin;

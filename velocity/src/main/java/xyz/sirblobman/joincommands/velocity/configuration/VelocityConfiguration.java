@@ -3,12 +3,13 @@ package xyz.sirblobman.joincommands.velocity.configuration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
 
-import xyz.sirblobman.joincommands.velocity.object.ProxyJoinCommand;
+import xyz.sirblobman.joincommands.velocity.command.ProxyJoinCommand;
 
 import com.google.common.reflect.TypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -68,6 +69,9 @@ public final class VelocityConfiguration {
         this.proxyJoinCommandList.clear();
 
         for (ConfigurationNode node : nodes) {
+            Object nodeKey = node.getKey();
+            String commandId = (nodeKey == null ? "null" : nodeKey.toString());
+
             ConfigurationNode permissionNode = node.getNode("permission");
             ConfigurationNode firstJoinOnlyNode = node.getNode("first-join-only");
             ConfigurationNode delayNode = node.getNode("delay");
@@ -83,12 +87,16 @@ public final class VelocityConfiguration {
                 commandList = commandListNode.getList(stringToken);
             } catch (ObjectMappingException ex) {
                 Logger logger = getLogger();
-                logger.log(Level.WARNING, "Failed to load command list from node '" + node.getKey() + "':", ex);
+                logger.log(Level.WARNING, "Failed to load command list from node '" + commandId + "':", ex);
                 commandList = new ArrayList<>();
             }
 
-            ProxyJoinCommand proxyJoinCommand = new ProxyJoinCommand(commandList, permission, firstJoinOnly, delay);
-            this.proxyJoinCommandList.add(proxyJoinCommand);
+            ProxyJoinCommand command = new ProxyJoinCommand(commandId);
+            command.setCommandList(commandList);
+            command.setPermissionName(permission);
+            command.setFirstJoinOnly(firstJoinOnly);
+            command.setDelay(delay);
+            this.proxyJoinCommandList.add(command);
         }
     }
 }

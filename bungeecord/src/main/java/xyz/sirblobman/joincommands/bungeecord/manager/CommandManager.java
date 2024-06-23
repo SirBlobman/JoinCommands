@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import net.md_5.bungee.config.Configuration;
 
 import xyz.sirblobman.joincommands.bungeecord.JoinCommandsPlugin;
-import xyz.sirblobman.joincommands.bungeecord.object.ProxyJoinCommand;
+import xyz.sirblobman.joincommands.bungeecord.command.ProxyJoinCommand;
 
 public final class CommandManager {
     private final JoinCommandsPlugin plugin;
@@ -76,8 +76,13 @@ public final class CommandManager {
         long delay = section.getLong("delay");
 
         try {
-            return new ProxyJoinCommand(commandList, permission, firstJoinOnly, delay);
-        } catch (Exception ex) {
+            ProxyJoinCommand command = new ProxyJoinCommand(commandId);
+            command.setCommandList(commandList);
+            command.setPermissionName(permission);
+            command.setFirstJoinOnly(firstJoinOnly);
+            command.setDelay(delay);
+            return command;
+        } catch (IllegalArgumentException ex) {
             Logger logger = getLogger();
             String messageFormat = "Failed to load a proxy join command with id '%s':";
             logger.log(Level.WARNING, String.format(Locale.US, messageFormat, commandId), ex);

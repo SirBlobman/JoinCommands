@@ -20,8 +20,8 @@ import xyz.sirblobman.joincommands.common.utility.Validate;
 import xyz.sirblobman.joincommands.spigot.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.spigot.manager.CommandManager;
 import xyz.sirblobman.joincommands.spigot.manager.PlayerDataManager;
-import xyz.sirblobman.joincommands.spigot.object.ServerJoinCommand;
-import xyz.sirblobman.joincommands.spigot.object.WorldJoinCommand;
+import xyz.sirblobman.joincommands.spigot.command.ServerJoinCommand;
+import xyz.sirblobman.joincommands.spigot.command.WorldJoinCommand;
 
 public final class ListenerJoinCommands implements Listener {
     private final JoinCommandsPlugin plugin;

@@ -1,4 +1,4 @@
-package xyz.sirblobman.joincommands.spigot.object;
+package xyz.sirblobman.joincommands.spigot.command;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +18,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
+import xyz.sirblobman.joincommands.common.command.JoinCommand;
 import xyz.sirblobman.joincommands.common.utility.Validate;
 import xyz.sirblobman.joincommands.spigot.JoinCommandsPlugin;
 import xyz.sirblobman.joincommands.spigot.manager.PlayerDataManager;
@@ -26,38 +27,17 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 
-public final class ServerJoinCommand {
-    private final List<String> commandList;
-    private final String permissionName;
-    private final boolean firstJoinOnly;
-    private final long delay;
-
+public final class ServerJoinCommand extends JoinCommand {
     private transient Permission permission;
 
-    public ServerJoinCommand(@NotNull List<String> commandList, @NotNull String permissionName, boolean firstJoinOnly,
-                             long delay) {
-        Validate.notEmpty(commandList, "commandList must not be empty or null.");
-
-        this.commandList = commandList;
-        this.permissionName = permissionName;
-        this.firstJoinOnly = firstJoinOnly;
-        this.delay = delay;
+    public ServerJoinCommand(@NotNull String id) {
+        super(id);
     }
 
-    public @NotNull List<String> getCommands() {
-        return Collections.unmodifiableList(this.commandList);
-    }
-
-    public @Nullable String getPermissionName() {
-        return this.permissionName;
-    }
-
-    public boolean isFirstJoinOnly() {
-        return this.firstJoinOnly;
-    }
-
-    public long getDelay() {
-        return this.delay;
+    @Override
+    public void setPermissionName(@Nullable String permissionName) {
+        super.setPermissionName(permissionName);
+        this.permission = null;
     }
 
     public @Nullable Permission getPermission() {
@@ -65,11 +45,11 @@ public final class ServerJoinCommand {
             return this.permission;
         }
 
-        if (this.permissionName == null || this.permissionName.isEmpty()) {
+        String permissionName = getPermissionName();
+        if (permissionName == null || permissionName.isEmpty()) {
             return null;
         }
 
-        String permissionName = getPermissionName();
         String permissionDescription = "A permission that allows a specific join command to be executed.";
         this.permission = new Permission(permissionName, permissionDescription, PermissionDefault.FALSE);
         return this.permission;
@@ -90,7 +70,7 @@ public final class ServerJoinCommand {
 
     public void execute(@NotNull JoinCommandsPlugin plugin, @NotNull Player player) {
         String playerName = player.getName();
-        List<String> commandList = getCommands();
+        List<String> commandList = getCommandList();
 
         for (String command : commandList) {
             String replaced = command.replace("{player}", playerName);

@@ -1,4 +1,4 @@
-package xyz.sirblobman.joincommands.bungeecord.object;
+package xyz.sirblobman.joincommands.bungeecord.command;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,37 +15,12 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 
 import xyz.sirblobman.joincommands.bungeecord.JoinCommandsPlugin;
+import xyz.sirblobman.joincommands.common.command.JoinCommand;
 import xyz.sirblobman.joincommands.common.utility.Validate;
 
-public final class ProxyJoinCommand {
-    private final List<String> commandList;
-    private final String permission;
-    private final boolean firstJoinOnly;
-    private final long delay;
-
-    public ProxyJoinCommand(@NotNull List<String> commandList, @NotNull String permission, boolean firstJoinOnly,
-                            long delay) {
-        this.commandList = Validate.notEmpty(commandList, "commandList must not be empty!");
-        this.permission = permission;
-
-        this.firstJoinOnly = firstJoinOnly;
-        this.delay = delay;
-    }
-
-    public @NotNull List<String> getCommands() {
-        return Collections.unmodifiableList(this.commandList);
-    }
-
-    public @NotNull String getPermission() {
-        return this.permission;
-    }
-
-    public boolean isFirstJoinOnly() {
-        return this.firstJoinOnly;
-    }
-
-    public long getDelay() {
-        return this.delay;
+public final class ProxyJoinCommand extends JoinCommand {
+    public ProxyJoinCommand(@NotNull String id) {
+        super(id);
     }
 
     public boolean canExecute(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player) {
@@ -53,25 +28,26 @@ public final class ProxyJoinCommand {
             return false;
         }
 
-        String permission = getPermission();
-        if (!permission.isEmpty()) {
-            return player.hasPermission(this.permission);
+        String permissionName = getPermissionName();
+        if (permissionName == null || permissionName.isEmpty()) {
+            return true;
         }
 
-        return true;
+        return player.hasPermission(permissionName);
     }
 
     public void execute(@NotNull JoinCommandsPlugin plugin, @NotNull ProxiedPlayer player) {
         String playerName = player.getName();
-        List<String> commandList = getCommands();
+        List<String> commandList = getCommandList();
         for (String command : commandList) {
             String replaced = command.replace("{player}", playerName);
             if (replaced.startsWith("[PLAYER]")) {
                 String playerCommand = replaced.substring(8);
                 runAsPlayer(plugin, player, playerCommand);
-            } else {
-                runAsConsole(plugin, replaced);
+                continue;
             }
+
+            runAsConsole(plugin, replaced);
         }
     }
 
@@ -82,8 +58,7 @@ public final class ProxyJoinCommand {
         }
 
         UUID playerId = player.getUniqueId();
-        String playerIdString = playerId.toString();
-        String path = ("joined-before." + playerIdString);
+        String path = ("joined-before." + playerId);
         return configuration.getBoolean(path, false);
     }
 
